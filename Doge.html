@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dogecoin Faucet Platinum V8.6</title>
+    <title>DOGE Faucet Platinum V8.6</title>
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* ستايل Dogecoin باللون البرتقالي المعتمد */
-        :root { --bg: #050505; --card: #111; --primary: #BA9F33; --gray: #a0a0a0; --line: #222; --success: #14F195; }
+        /* اللون الأساسي البرتقالي لعملة دوجكوين */
+        :root { --bg: #050505; --card: #111; --primary: #ffb11a; --gray: #a0a0a0; --line: #222; --success: #14F195; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 110px; user-select: none; overflow-x: hidden; text-align: left; transition: 0.3s; }
         .rtl body { text-align: right; direction: rtl; }
         .container { padding: 15px; max-width: 450px; margin: auto; }
         #p-home { padding-top: 15vh; padding-bottom: 5vh; }
-        .swal2-popup-custom { background: #111 !important; color: #fff !important; border: 1px solid var(--line) !important; border-radius: 25px !important; box-shadow: 0 0 20px rgba(186,159,51,0.2) !important; }
+        .swal2-popup-custom { background: #111 !important; color: #fff !important; border: 1px solid var(--line) !important; border-radius: 25px !important; box-shadow: 0 0 20px rgba(255,177,26,0.2) !important; }
         .swal2-styled.swal2-confirm { background-color: var(--primary) !important; color: #000 !important; border-radius: 15px !important; font-weight: bold !important; }
         .lang-pnl { padding: 10px 15px; display: flex; justify-content: flex-end; }
         .btn-lang { background: #1a1a1a; color: var(--primary); border: 1px solid var(--line); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
         .card { background: var(--card); border-radius: 25px; padding: 20px; border: 1px solid var(--line); text-align: center; margin-bottom: 15px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .ad-slot { width: 100%; min-height: 60px; background: rgba(255,255,255,0.02); border-radius: 12px; margin: 10px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; display: none; }
-        .fp-box { margin-top: 15px; padding: 15px; background: rgba(186,159,51,0.05); border: 1px dashed var(--primary); border-radius: 18px; font-size: 0.85rem; color: var(--gray); }
+        .fp-box { margin-top: 15px; padding: 15px; background: rgba(255, 177, 26, 0.05); border: 1px dashed var(--primary); border-radius: 18px; font-size: 0.85rem; color: var(--gray); }
         .fp-link { color: var(--primary); text-decoration: none; font-weight: bold; display: block; margin-top: 5px; }
-        .bal-val { font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 5px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px rgba(186,159,51,0.3); }
+        .bal-val { font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 5px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px rgba(255,177,26,0.3); }
         .btn-main { width: 100%; padding: 18px; border-radius: 18px; border: none; background: var(--primary); color: #000; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-main:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
         .v-input { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; margin-bottom: 10px; box-sizing: border-box; text-align: center; font-size: 1rem; outline: none; }
@@ -43,16 +43,14 @@
     <div class="lang-pnl"><button class="btn-lang" onclick="toggleLang()" id="lang-btn">العربية</button></div>
     <div id="ad-top-slot" class="ad-slot"></div>
     <div class="container">
-        <div id="p-home" class="page-view animate__animated animate__fadeIn">
+        <div id="p-home" class="page-view">
             <div class="card">
                 <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" style="width:80px;" id="smc-trigger">
                 <div style="color:var(--gray); font-size: 0.9rem; margin-top:10px;" id="txt-total-bal">TOTAL BALANCE (DOGE)</div>
                 <div id="bal-display" class="bal-val">0.000000</div>
-                
                 <div class="cap-cont">
-                    <div class="h-captcha" data-sitekey="YOUR_SITE_KEY" data-callback="onCapSolved" data-theme="dark"></div>
+                    <div class="h-captcha" data-sitekey="50e831e4-919a-4c16-98ce-deaac51632a8" data-callback="onCapSolved" data-theme="dark"></div>
                 </div>
-
                 <div id="claim-area"><button id="btn-claim" class="btn-main" disabled>CLAIM DOGE ⚡</button></div>
                 <div id="wait-area" class="hidden">
                     <div id="timer-text" style="font-weight:bold; font-size:1.4rem; color:#fff;">00:00</div>
@@ -61,14 +59,14 @@
             </div>
         </div>
 
-        <div id="p-wallet" class="page-view hidden animate__animated animate__fadeIn">
+        <div id="p-wallet" class="page-view hidden">
             <div class="card">
                 <h3 style="color:var(--primary)" id="txt-withdraw-title">INSTANT WITHDRAW</h3>
                 <input type="text" id="w-email" placeholder="FaucetPay Email Address" class="v-input">
-                <input type="number" id="w-amt" placeholder="Amount" class="v-input" step="0.01">
-                <button class="btn-main" id="btn-withdraw">WITHDRAW TO FAUCETPAY</button>
+                <input type="number" id="w-amt" placeholder="Amount" class="v-input" step="0.0001">
+                <button class="btn-main" id="btn-withdraw">WITHDRAW</button>
                 <div style="margin-top:10px; font-size:0.8rem; color:var(--gray);">
-                    <span id="txt-min">Min:</span> <span id="min-text">1.00</span> DOGE
+                    <span id="txt-min">Min:</span> <span id="min-text">0.5</span> DOGE
                 </div>
                 <div class="fp-box">
                     <span id="txt-no-wallet">Don't have a FaucetPay account?</span>
@@ -77,11 +75,11 @@
             </div>
         </div>
 
-        <div id="p-refs" class="page-view hidden animate__animated animate__fadeIn">
+        <div id="p-refs" class="page-view hidden">
             <div class="card">
                 <h3 style="color:var(--primary)" id="txt-ref-title">REFERRAL PROGRAM</h3>
                 <p style="font-size:0.9rem; color:var(--gray)">
-                    <span id="txt-earn">Earn</span> <span id="ref-bonus-text">0.01</span> <span id="txt-earn-suffix">DOGE for every friend!</span>
+                    <span id="txt-earn">Earn</span> <span id="ref-bonus-text">0.001</span> <span id="txt-earn-suffix">DOGE/Friend</span>
                 </p>
                 <input type="text" id="ref-link" readonly class="v-input" style="background:#000; color:var(--primary); border-style:dashed;">
                 <button class="btn-main" onclick="copyRef()" id="btn-copy">COPY LINK</button>
@@ -97,8 +95,8 @@
     <div id="smc-ui" class="smc-panel">
         <h2 style="color:var(--primary)">DOGE SMC PANEL V8.6 <span id="user-count-badge">Users: 0</span></h2>
         <label>API Key:</label><input type="text" id="cfg-api" class="v-input">
-        <label>Reward:</label><input type="number" id="cfg-reward" class="v-input" step="0.0001">
-        <label>Ref Bonus:</label><input type="number" id="cfg-ref-bonus" class="v-input" step="0.0001">
+        <label>Reward:</label><input type="number" id="cfg-reward" class="v-input" step="0.000001">
+        <label>Ref Bonus:</label><input type="number" id="cfg-ref-bonus" class="v-input" step="0.000001">
         <label>Wait (Min):</label><input type="number" id="cfg-wait" class="v-input">
         <label>Min Withdraw:</label><input type="number" id="cfg-min" class="v-input">
         <label>Ads Top (HTML):</label><textarea id="cfg-ad-top" class="v-input"></textarea>
@@ -117,7 +115,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue, update, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // استعادة المنطق البرمجي الكامل
         const fbCfg = { apiKey: "AIzaSyD74FRYsTCNx8RjMYBdlUKdIs46CgY5154", databaseURL: "https://pinixmining-default-rtdb.firebaseio.com" };
         const app = initializeApp(fbCfg); const db = getDatabase(app);
         const tg = window.Telegram?.WebApp;
@@ -126,7 +123,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const refBy = urlParams.get('start');
 
-        let sets = { reward: 0.001, wait: 5, min: 1.0, api: "", adTop: "", adBottom: "", refBonus: 0.01 };
+        let sets = { reward: 0.01, wait: 5, min: 0.5, api: "", adTop: "", adBottom: "", refBonus: 0.001 };
         let uBal = 0; let tTick; let currentLang = 'en';
         
         const userRef = ref(db, 'doge_users/' + uid);
@@ -169,14 +166,21 @@
                 sets = s.val();
                 document.getElementById('min-text').innerText = sets.min;
                 document.getElementById('ref-bonus-text').innerText = sets.refBonus;
+                document.getElementById('cfg-api').value = sets.api || "";
+                document.getElementById('cfg-reward').value = sets.reward;
+                document.getElementById('cfg-ref-bonus').value = sets.refBonus;
+                document.getElementById('cfg-wait').value = sets.wait;
+                document.getElementById('cfg-min').value = sets.min;
+                document.getElementById('cfg-ad-top').value = sets.adTop || "";
+                document.getElementById('cfg-ad-bottom').value = sets.adBottom || "";
                 const top = document.getElementById('ad-top-slot');
-                if(sets.adTop) { top.innerHTML = sets.adTop; top.style.display = 'flex'; }
+                if(sets.adTop && sets.adTop !== "") { top.innerHTML = sets.adTop; top.style.display = 'flex'; } else { top.style.display = 'none'; }
                 const bot = document.getElementById('ad-bottom-slot');
-                if(sets.adBottom) { bot.innerHTML = sets.adBottom; bot.style.display = 'flex'; }
+                if(sets.adBottom && sets.adBottom !== "") { bot.innerHTML = sets.adBottom; bot.style.display = 'flex'; } else { bot.style.display = 'none'; }
             }
         });
 
-        onValue(ref(db, 'doge_users'), (snap) => { if(snap.exists()) document.getElementById('user-count-badge').innerText = "Users: " + Object.keys(snap.val()).length; });
+        onValue(ref(db, 'doge_users'), (snapshot) => { if(snapshot.exists()) { document.getElementById('user-count-badge').innerText = "Users: " + Object.keys(snapshot.val()).length; } });
 
         get(userRef).then(async (s) => {
             if(!s.exists()) {
@@ -211,7 +215,7 @@
                     document.getElementById('wait-area').classList.remove('hidden');
                     const m = Math.floor(diff/60000), s = Math.floor((diff%60000)/1000);
                     document.getElementById('timer-text').innerText = `${m}:${s<10?'0'+s:s}`;
-                    document.getElementById('p-bar').style.width = (((sets.wait*60000)-diff)/(sets.wait*60000)*100) + "%";
+                    document.getElementById('p-bar').style.width = (( (sets.wait*60000)-diff )/(sets.wait*60000)*100) + "%";
                 } else { document.getElementById('claim-area').classList.remove('hidden'); document.getElementById('wait-area').classList.add('hidden'); }
             }, 1000);
         }
@@ -236,15 +240,10 @@
 
         window.copyRef = () => { const el = document.getElementById("ref-link"); el.select(); document.execCommand("copy"); showPop('Copied!', '', 'success', 1000); };
         window.nav = (p, el) => { document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden')); document.getElementById('p-'+p).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); };
-        
-        document.getElementById('btn-save-smc').onclick = async () => {
-            await set(configRef, { api: document.getElementById('cfg-api').value, reward: document.getElementById('cfg-reward').value, refBonus: document.getElementById('cfg-ref-bonus').value, wait: document.getElementById('cfg-wait').value, min: document.getElementById('cfg-min').value, adTop: document.getElementById('cfg-ad-top').value, adBottom: document.getElementById('cfg-ad-bottom').value });
-            showPop('Saved', '', 'success');
-        };
-
+        document.getElementById('btn-save-smc').onclick = async () => { await set(configRef, { api: document.getElementById('cfg-api').value, reward: document.getElementById('cfg-reward').value, refBonus: document.getElementById('cfg-ref-bonus').value, wait: document.getElementById('cfg-wait').value, min: document.getElementById('cfg-min').value, adTop: document.getElementById('cfg-ad-top').value, adBottom: document.getElementById('cfg-ad-bottom').value }); showPop('Saved', '', 'success'); };
         let gate = 0; document.getElementById('smc-trigger').onclick = () => { gate++; if(gate >= 5) { Swal.fire({ title: 'Admin', input: 'password', customClass: { popup: 'swal2-popup-custom' } }).then(res => { if(res.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block'; }); gate=0; } };
-
         applyLang();
     </script>
 </body>
-</html>
+                    </html>
+                        
