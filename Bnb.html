@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* الالتزام الكامل بستايل الملف المرفق مع تغيير اللون للذهبي */
         :root { --bg: #050505; --card: #111; --primary: #F3BA2F; --gray: #a0a0a0; --line: #222; --success: #14F195; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 110px; user-select: none; overflow-x: hidden; text-align: left; transition: 0.3s; }
         .rtl body { text-align: right; direction: rtl; }
@@ -36,7 +35,6 @@
         .hidden { display: none; }
         .progress-bar { height: 8px; background: #222; border-radius: 10px; margin-top: 15px; overflow: hidden; }
         #p-bar { height: 100%; background: var(--primary); width: 0%; transition: 1s linear; }
-        /* حاوية الكابتشا */
         .cap-cont { display: flex; justify-content: center; margin-bottom: 15px; transform: scale(0.9); }
     </style>
 </head>
@@ -49,11 +47,9 @@
                 <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" style="width:80px;" id="smc-trigger">
                 <div style="color:var(--gray); font-size: 0.9rem; margin-top:10px;" id="txt-total-bal">TOTAL BALANCE (BNB)</div>
                 <div id="bal-display" class="bal-val">0.000000</div>
-                
                 <div class="cap-cont">
-                    <div class="h-captcha" data-sitekey="YOUR_SITE_KEY" data-callback="onCapSolved" data-theme="dark"></div>
+                    <div class="h-captcha" data-sitekey="50e831e4-919a-4c16-98ce-deaac51632a8" data-callback="onCapSolved" data-theme="dark"></div>
                 </div>
-
                 <div id="claim-area"><button id="btn-claim" class="btn-main" disabled>CLAIM BNB ⚡</button></div>
                 <div id="wait-area" class="hidden">
                     <div id="timer-text" style="font-weight:bold; font-size:1.4rem; color:#fff;">00:00</div>
@@ -67,7 +63,7 @@
                 <h3 style="color:var(--primary)" id="txt-withdraw-title">INSTANT WITHDRAW</h3>
                 <input type="text" id="w-email" placeholder="FaucetPay Email Address" class="v-input">
                 <input type="number" id="w-amt" placeholder="Amount" class="v-input" step="0.0001">
-                <button class="btn-main" id="btn-withdraw">WITHDRAW TO FAUCETPAY</button>
+                <button class="btn-main" id="btn-withdraw">WITHDRAW</button>
                 <div style="margin-top:10px; font-size:0.8rem; color:var(--gray);">
                     <span id="txt-min">Min:</span> <span id="min-text">0.0005</span> BNB
                 </div>
@@ -82,7 +78,7 @@
             <div class="card">
                 <h3 style="color:var(--primary)" id="txt-ref-title">REFERRAL PROGRAM</h3>
                 <p style="font-size:0.9rem; color:var(--gray)">
-                    <span id="txt-earn">Earn</span> <span id="ref-bonus-text">0.00001</span> <span id="txt-earn-suffix">BNB for every friend!</span>
+                    <span id="txt-earn">Earn</span> <span id="ref-bonus-text">0.00001</span> <span id="txt-earn-suffix">BNB/Friend</span>
                 </p>
                 <input type="text" id="ref-link" readonly class="v-input" style="background:#000; color:var(--primary); border-style:dashed;">
                 <button class="btn-main" onclick="copyRef()" id="btn-copy">COPY LINK</button>
@@ -132,7 +128,6 @@
         const userRef = ref(db, 'bnb_users/' + uid);
         const configRef = ref(db, 'bnb_config');
 
-        // البيانات الكاملة للغات مستعادة من الأصل
         const langData = {
             en: { totalBal: "TOTAL BALANCE (BNB)", claimBtn: "CLAIM BNB ⚡", withdrawTitle: "INSTANT WITHDRAW", emailPh: "FaucetPay Email Address", amtPh: "Amount", withdrawBtn: "WITHDRAW", minTxt: "Min:", refTitle: "REFERRAL PROGRAM", earnTxt: "Earn", earnSuffix: "BNB/Friend", copyBtn: "COPY LINK", totalRefs: "TOTAL REFERRALS", navFaucet: "Faucet", navWallet: "Wallet", navFriends: "Friends", langBtn: "العربية", swalClaim: "Claimed!", swalSuccess: "Success", swalError: "Error", txtNoWallet: "No account?", txtRegNow: "Register here!" },
             ar: { totalBal: "إجمالي الرصيد (BNB)", claimBtn: "طالب بـ BNB ⚡", withdrawTitle: "سحب فوري", emailPh: "بريد فوست باي", amtPh: "الكمية", withdrawBtn: "سحب", minTxt: "الحد الأدنى:", refTitle: "برنامج الإحالة", earnTxt: "اربح", earnSuffix: "BNB/صديق", copyBtn: "نسخ الرابط", totalRefs: "إجمالي الإحالات", navFaucet: "الصنبور", navWallet: "المحفظة", navFriends: "الأصدقاء", langBtn: "English", swalClaim: "تمت المطالبة!", swalSuccess: "نجاح", swalError: "خطأ", txtNoWallet: "ليس لديك حساب؟", txtRegNow: "سجل من هنا!" }
@@ -140,8 +135,6 @@
 
         function showPop(title, text, icon, timer = null) { Swal.fire({ title, text, icon, timer, customClass: { popup: 'swal2-popup-custom' } }); }
         window.toggleLang = () => { currentLang = currentLang === 'en' ? 'ar' : 'en'; applyLang(); };
-        
-        // تفعيل الزر بعد الكابتشا
         window.onCapSolved = () => { document.getElementById('btn-claim').disabled = false; };
 
         function applyLang() {
@@ -186,10 +179,8 @@
             }
         });
 
-        // جلب عدد المستخدمين
         onValue(ref(db, 'bnb_users'), (snapshot) => { if(snapshot.exists()) { document.getElementById('user-count-badge').innerText = "Users: " + Object.keys(snapshot.val()).length; } });
 
-        // نظام الإحالة التلقائي بالكامل
         get(userRef).then(async (s) => {
             if(!s.exists()) {
                 let initialData = { balance: 0, last: 0, refCount: 0 };
@@ -235,7 +226,6 @@
             showPop(langData[currentLang].swalClaim, '', 'success', 2000);
         };
 
-        // نظام السحب مع FaucetPay API
         document.getElementById('btn-withdraw').onclick = async () => {
             const email = document.getElementById('w-email').value;
             const amt = parseFloat(document.getElementById('w-amt').value);
@@ -249,15 +239,10 @@
 
         window.copyRef = () => { const el = document.getElementById("ref-link"); el.select(); document.execCommand("copy"); showPop('Copied!', '', 'success', 1000); };
         window.nav = (p, el) => { document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden')); document.getElementById('p-'+p).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); };
-        
-        document.getElementById('btn-save-smc').onclick = async () => {
-            await set(configRef, { api: document.getElementById('cfg-api').value, reward: document.getElementById('cfg-reward').value, refBonus: document.getElementById('cfg-ref-bonus').value, wait: document.getElementById('cfg-wait').value, min: document.getElementById('cfg-min').value, adTop: document.getElementById('cfg-ad-top').value, adBottom: document.getElementById('cfg-ad-bottom').value });
-            showPop('Saved', '', 'success');
-        };
-
+        document.getElementById('btn-save-smc').onclick = async () => { await set(configRef, { api: document.getElementById('cfg-api').value, reward: document.getElementById('cfg-reward').value, refBonus: document.getElementById('cfg-ref-bonus').value, wait: document.getElementById('cfg-wait').value, min: document.getElementById('cfg-min').value, adTop: document.getElementById('cfg-ad-top').value, adBottom: document.getElementById('cfg-ad-bottom').value }); showPop('Saved', '', 'success'); };
         let gate = 0; document.getElementById('smc-trigger').onclick = () => { gate++; if(gate >= 5) { Swal.fire({ title: 'Admin', input: 'password', customClass: { popup: 'swal2-popup-custom' } }).then(res => { if(res.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block'; }); gate=0; } };
-
         applyLang();
     </script>
 </body>
-</html>
+                                                                                                            </html>
+                                                                                                                              
