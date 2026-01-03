@@ -14,31 +14,32 @@
         #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
         .main-wrapper { position: relative; z-index: 2; height: 100dvh; display: flex; flex-direction: column; padding: 20px; }
         
-        /* ضبط اسم الصفحة والهيدر */
-        .header { text-align: center; margin-bottom: 25px; margin-top: 10px; width: 100%; }
-        .title { font-size: 38px; font-weight: 900; background: linear-gradient(135deg, #fff 30%, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; line-height: 1.2; display: block; width: 100%; }
+        /* الهيدر الأصلي */
+        .header { text-align: center; margin-bottom: 30px; margin-top: 10px; }
+        .title { font-size: 38px; font-weight: 900; background: linear-gradient(135deg, #fff 30%, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; line-height: 1; }
         .subtitle { font-size: 12px; color: var(--primary); letter-spacing: 3px; font-weight: 800; margin-top: 5px; opacity: 0.8; }
         
-        /* ضبط تنسيق المربعات */
+        /* المربعات الأصلية */
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; flex: 1; align-content: center; max-width: 500px; margin: 0 auto; width: 100%; }
         .coin-card { 
             background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 25px 15px; 
             text-align: center; position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; text-decoration: none; color: inherit; display: block;
         }
         .coin-card:active { transform: scale(0.95); background: rgba(255,255,255,0.02); }
         .coin-card img { width: 55px; height: 55px; margin-bottom: 12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
         .coin-name { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 6px; letter-spacing: 0.5px; }
         .coin-status { font-size: 9px; background: rgba(20, 241, 149, 0.1); color: #14f195; padding: 4px 10px; border-radius: 10px; display: inline-block; font-weight: 800; }
         
-        /* رفع زر التلجرام أعلى قليلاً */
-        .tg-banner { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 20px; margin-top: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        /* التليجرام الأصلي مع رفعه قليلاً */
+        .tg-banner { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 20px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
         .tg-info { display: flex; align-items: center; gap: 15px; }
         .tg-icon { font-size: 28px; color: var(--primary); }
-        .tg-txt h3 { font-size: 14px; margin-bottom: 2px; color: #fff; }
+        .tg-txt h3 { font-size: 14px; margin-bottom: 2px; }
         .tg-txt p { font-size: 11px; color: #777; }
         .tg-btn { background: var(--primary); color: #fff; padding: 10px 22px; border-radius: 14px; font-size: 12px; font-weight: 800; text-decoration: none; }
         
+        /* زر اللغة الأصلي */
         .lang-switch { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; border: 1px solid var(--line); z-index: 10; }
     </style>
 </head>
@@ -53,24 +54,24 @@
 
         <div class="grid-container">
             <a href="Ton.html" class="coin-card animate__animated animate__zoomIn">
-                <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" alt="TON">
+                <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png">
                 <div class="coin-name">TON</div>
-                <div class="coin-status" id="txt-active-1">ACTIVE</div>
+                <div class="coin-status" id="s1">ACTIVE</div>
             </a>
             <a href="Sol.html" class="coin-card animate__animated animate__zoomIn" style="animation-delay: 0.1s">
-                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="SOL">
+                <img src="https://cryptologos.cc/logos/solana-sol-logo.png">
                 <div class="coin-name">SOLANA</div>
-                <div class="coin-status" id="txt-active-2">ACTIVE</div>
+                <div class="coin-status" id="s2">ACTIVE</div>
             </a>
             <a href="Doge.html" class="coin-card animate__animated animate__zoomIn" style="animation-delay: 0.2s">
-                <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" alt="DOGE">
-                <div class="coin-name">DOGECOIN</div>
-                <div class="coin-status" id="txt-active-3">ACTIVE</div>
+                <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png">
+                <div class="coin-name">DOGE</div>
+                <div class="coin-status" id="s3">ACTIVE</div>
             </a>
             <a href="Bnb.html" class="coin-card animate__animated animate__zoomIn" style="animation-delay: 0.3s">
-                <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
+                <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png">
                 <div class="coin-name">BNB</div>
-                <div class="coin-status" id="txt-active-4">ACTIVE</div>
+                <div class="coin-status" id="s4">ACTIVE</div>
             </a>
         </div>
 
@@ -78,65 +79,38 @@
             <div class="tg-info">
                 <div class="tg-icon"><i class="fab fa-telegram"></i></div>
                 <div class="tg-txt">
-                    <h3 id="txt-tg-title">OFFICIAL HUB</h3>
-                    <p id="txt-tg-desc">Updates & Payments</p>
+                    <h3 id="tg-t">OFFICIAL HUB</h3>
+                    <p id="tg-d">Updates & Payments</p>
                 </div>
             </div>
-            <a href="https://t.me/your_channel" class="tg-btn" id="txt-tg-btn">JOIN</a>
+            <a href="https://t.me/your_channel" class="tg-btn" id="tg-b">JOIN</a>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('particles-js');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.getElementById('particles-js'); const ctx = canvas.getContext('2d');
         let particles = [];
-        class Particle {
-            constructor() { this.init(); }
-            init() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
-                this.opacity = Math.random() * 0.5;
-            }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-            }
-            draw() { ctx.fillStyle = `rgba(255,255,255,${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
-        }
-        function initParticles() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = [];
-            for(let i=0; i<60; i++) particles.push(new Particle());
-        }
-        function anim() { ctx.clearRect(0,0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(anim); }
-        window.addEventListener('resize', initParticles);
-        initParticles(); anim();
+        class P { constructor() { this.init(); } init() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.s = Math.random()*1.5; this.sx = Math.random()*0.5-0.25; this.sy = Math.random()*0.5-0.25; this.o = Math.random()*0.5; } update() { this.x += this.sx; this.y += this.sy; if(this.x<0||this.x>canvas.width) this.sx*=-1; if(this.y<0||this.y>canvas.height) this.sy*=-1; } draw() { ctx.fillStyle=`rgba(255,255,255,${this.o})`; ctx.beginPath(); ctx.arc(this.x,this.y,this.s,0,Math.PI*2); ctx.fill(); } }
+        function init() { canvas.width=window.innerWidth; canvas.height=window.innerHeight; particles=[]; for(let i=0;i<60;i++) particles.push(new P()); }
+        function anim() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(anim); }
+        window.onresize=init; init(); anim();
 
-        // إصلاح نظام اللغة
-        let currentLang = 'en';
-        const langData = {
-            en: { title: "SUPER PROFIT", subtitle: "ELITE CRYPTO REWARDS V11", active: "ACTIVE", tgTitle: "OFFICIAL HUB", tgDesc: "Updates & Payments", tgBtn: "JOIN", langBtn: "العربية" },
-            ar: { title: "سوبر الربح", subtitle: "مركز مكافآت النخبة V11", active: "نشط", tgTitle: "قناتنا الرسمية", tgDesc: "تحديثات ودفع فوري", tgBtn: "انضم", langBtn: "English" }
+        let cur = 'en';
+        const data = {
+            en: { t: "SUPER PROFIT", st: "ELITE CRYPTO REWARDS V11", a: "ACTIVE", tt: "OFFICIAL HUB", td: "Updates & Payments", tb: "JOIN", lb: "العربية" },
+            ar: { t: "سوبر الربح", st: "مركز مكافآت النخبة V11", a: "نشط", tt: "قناتنا الرسمية", td: "تحديثات ودفع فوري", tb: "انضم", lb: "English" }
         };
 
         function toggleLang() {
-            currentLang = currentLang === 'en' ? 'ar' : 'en';
-            const d = langData[currentLang];
-            document.getElementById('main-html').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('lang-btn').innerText = d.langBtn;
-            document.getElementById('txt-title').innerText = d.title;
-            document.getElementById('txt-subtitle').innerText = d.subtitle;
-            document.getElementById('txt-tg-title').innerText = d.tgTitle;
-            document.getElementById('txt-tg-desc').innerText = d.tgDesc;
-            document.getElementById('txt-tg-btn').innerText = d.tgBtn;
-            for(let i=1; i<=4; i++) {
-                document.getElementById('txt-active-'+i).innerText = d.active;
-            }
+            cur = cur === 'en' ? 'ar' : 'en'; const d = data[cur];
+            document.getElementById('main-html').dir = cur === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('lang-btn').innerText = d.lb;
+            document.getElementById('txt-title').innerText = d.t;
+            document.getElementById('txt-subtitle').innerText = d.st;
+            document.getElementById('tg-t').innerText = d.tt;
+            document.getElementById('tg-d').innerText = d.td;
+            document.getElementById('tg-b').innerText = d.tb;
+            for(let i=1; i<=4; i++) document.getElementById('s'+i).innerText = d.a;
         }
     </script>
 </body>
