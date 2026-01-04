@@ -1,249 +1,317 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="main-html">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DOGE Faucet Platinum V8.6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Doge Platinum V8.6 - DogeClaimer</title>
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* اللون الأساسي البرتقالي لعملة دوجكوين */
-        :root { --bg: #050505; --card: #111; --primary: #ffb11a; --gray: #a0a0a0; --line: #222; --success: #14F195; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 110px; user-select: none; overflow-x: hidden; text-align: left; transition: 0.3s; }
-        .rtl body { text-align: right; direction: rtl; }
-        .container { padding: 15px; max-width: 450px; margin: auto; }
-        #p-home { padding-top: 15vh; padding-bottom: 5vh; }
-        .swal2-popup-custom { background: #111 !important; color: #fff !important; border: 1px solid var(--line) !important; border-radius: 25px !important; box-shadow: 0 0 20px rgba(255,177,26,0.2) !important; }
-        .swal2-styled.swal2-confirm { background-color: var(--primary) !important; color: #000 !important; border-radius: 15px !important; font-weight: bold !important; }
-        .lang-pnl { padding: 10px 15px; display: flex; justify-content: flex-end; }
-        .btn-lang { background: #1a1a1a; color: var(--primary); border: 1px solid var(--line); padding: 8px 15px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
-        .card { background: var(--card); border-radius: 25px; padding: 20px; border: 1px solid var(--line); text-align: center; margin-bottom: 15px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .ad-slot { width: 100%; min-height: 60px; background: rgba(255,255,255,0.02); border-radius: 12px; margin: 10px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; display: none; }
-        .fp-box { margin-top: 15px; padding: 15px; background: rgba(255, 177, 26, 0.05); border: 1px dashed var(--primary); border-radius: 18px; font-size: 0.85rem; color: var(--gray); }
-        .fp-link { color: var(--primary); text-decoration: none; font-weight: bold; display: block; margin-top: 5px; }
-        .bal-val { font-size: 2.8rem; font-weight: 800; color: var(--primary); margin: 5px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px rgba(255,177,26,0.3); }
-        .btn-main { width: 100%; padding: 18px; border-radius: 18px; border: none; background: var(--primary); color: #000; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-main:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
-        .v-input { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 15px; margin-bottom: 10px; box-sizing: border-box; text-align: center; font-size: 1rem; outline: none; }
-        .nav-bot { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; padding: 12px 0 35px; border-top: 1px solid var(--line); direction: ltr; z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; color: var(--gray); cursor: pointer; font-size: 0.8rem; }
+        /* تغيير الهوية اللونية إلى البرتقالي (Dogecoin) */
+        :root { 
+            --bg: #050505; 
+            --card: #111; 
+            --primary: #FF9900; 
+            --gray: #a0a0a0; 
+            --line: #222; 
+            --glass: rgba(255, 255, 255, 0.05); 
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+
+        /* زر الرجوع الذكي */
+        .back-home-btn { 
+            position: fixed; 
+            top: 15px; 
+            left: 15px; 
+            width: 40px; 
+            height: 40px; 
+            background: var(--glass); 
+            border: 1px solid var(--line); 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--primary); 
+            text-decoration: none; 
+            z-index: 1000; 
+            backdrop-filter: blur(5px); 
+            transition: 0.3s;
+        }
+        .back-home-btn:active { transform: scale(0.9); }
+
+        /* ستايل النوافذ المنبثقة المعتمد */
+        .swal2-popup { border-radius: 25px !important; background: #111 !important; border: 1px solid var(--primary) !important; color: #fff !important; }
+        .swal2-title { color: var(--primary) !important; }
+        .swal2-confirm { background: var(--primary) !important; color: #000 !important; border-radius: 12px !important; font-weight: bold !important; }
+
+        .ad-zone-top { width: 100%; height: 80px; display: flex; align-items: center; justify-content: center; z-index: 10; padding-top: 10px; }
+        .main-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 20px; position: relative; bottom: 15px; }
+        .page-view { width: 100%; max-width: 420px; display: none; flex-direction: column; }
+        .page-view.active { display: flex; animation: slideUp 0.4s ease-out; }
+
+        .card { background: var(--card); border-radius: 35px; padding: 25px 20px; border: 1px solid var(--line); text-align: center; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.9); position: relative; }
+        .bal-val { font-size: 3rem; font-weight: 900; color: var(--primary); margin: 5px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px rgba(255, 153, 0, 0.3); }
+        
+        .btn-main { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--primary); color: #000; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 15px; box-shadow: 0 5px 15px rgba(255, 153, 0, 0.2); }
+        .btn-main:active { transform: scale(0.97); }
+        .btn-main:disabled { opacity: 0.2; filter: grayscale(1); }
+
+        .v-input { width: 100%; padding: 16px; background: #000; border: 1px solid #333; color: #fff; border-radius: 20px; margin-bottom: 12px; text-align: center; font-size: 1rem; transition: 0.3s; }
+        .v-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(255, 153, 0, 0.1); }
+
+        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .info-item { background: var(--glass); padding: 12px; border-radius: 18px; border: 1px solid #222; }
+        .info-label { display: block; font-size: 0.65rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .info-value { display: block; font-size: 0.9rem; font-weight: bold; color: var(--primary); }
+
+        .fpay-banner { background: linear-gradient(135deg, #1a1a1a 0%, #000 100%); border: 1px dashed var(--primary); border-radius: 20px; padding: 15px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .btn-reg { background: var(--primary); color: #000; padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 0.75rem; font-weight: bold; }
+
+        .nav-bot { height: 95px; background: #000; display: flex; border-top: 1px solid var(--line); padding-bottom: 25px; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--gray); cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
         .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 1.6rem; display: block; margin-bottom: 4px; }
-        .smc-panel { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; padding: 25px; direction: ltr; overflow-y: auto; text-align: left; }
-        .hidden { display: none; }
-        .progress-bar { height: 8px; background: #222; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 6px; }
+
+        .smc-panel { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; padding: 25px; overflow-y: auto; }
+        #timer-text { font-size: 2.5rem; font-weight: 900; margin: 15px 0; color: var(--primary); }
+        .p-bar-bg { height: 8px; background: #222; border-radius: 10px; overflow: hidden; margin-bottom: 20px; width: 80%; margin-left: 10%; }
         #p-bar { height: 100%; background: var(--primary); width: 0%; transition: 1s linear; }
-        .cap-cont { display: flex; justify-content: center; margin-bottom: 15px; transform: scale(0.9); }
+        .hidden { display: none !important; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="ltr">
-    <div class="lang-pnl"><button class="btn-lang" onclick="toggleLang()" id="lang-btn">العربية</button></div>
-    <div id="ad-top-slot" class="ad-slot"></div>
-    <div class="container">
-        <div id="p-home" class="page-view">
-            <div class="card">
-                <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" style="width:80px;" id="smc-trigger">
-                <div style="color:var(--gray); font-size: 0.9rem; margin-top:10px;" id="txt-total-bal">TOTAL BALANCE (DOGE)</div>
-                <div id="bal-display" class="bal-val">0.000000</div>
-                <div class="cap-cont">
-                    <div class="h-captcha" data-sitekey="c47a5bea-0fa4-49c6-88bc-3284350e62fc" data-callback="onCapSolved" data-theme="dark"></div>
-                </div>
-                <div id="claim-area"><button id="btn-claim" class="btn-main" disabled>CLAIM DOGE ⚡</button></div>
-                <div id="wait-area" class="hidden">
-                    <div id="timer-text" style="font-weight:bold; font-size:1.4rem; color:#fff;">00:00</div>
-                    <div class="progress-bar"><div id="p-bar"></div></div>
-                </div>
-            </div>
-        </div>
+<body>
 
-        <div id="p-wallet" class="page-view hidden">
-            <div class="card">
-                <h3 style="color:var(--primary)" id="txt-withdraw-title">INSTANT WITHDRAW</h3>
-                <input type="text" id="w-email" placeholder="FaucetPay Email Address" class="v-input">
-                <input type="number" id="w-amt" placeholder="Amount" class="v-input" step="0.0001">
-                <button class="btn-main" id="btn-withdraw">WITHDRAW</button>
-                <div style="margin-top:10px; font-size:0.8rem; color:var(--gray);">
-                    <span id="txt-min">Min:</span> <span id="min-text">0.5</span> DOGE
-                </div>
-                <div class="fp-box">
-                    <span id="txt-no-wallet">Don't have a FaucetPay account?</span>
-                    <a href="https://faucetpay.io/?r=362774" target="_blank" class="fp-link" id="txt-reg-now">Register here!</a>
-                </div>
-            </div>
-        </div>
+<a href="index.html" class="back-home-btn">
+    <i class="fas fa-chevron-left"></i>
+</a>
 
-        <div id="p-refs" class="page-view hidden">
-            <div class="card">
-                <h3 style="color:var(--primary)" id="txt-ref-title">REFERRAL PROGRAM</h3>
-                <p style="font-size:0.9rem; color:var(--gray)">
-                    <span id="txt-earn">Earn</span> <span id="ref-bonus-text">0.001</span> <span id="txt-earn-suffix">DOGE/Friend</span>
-                </p>
-                <input type="text" id="ref-link" readonly class="v-input" style="background:#000; color:var(--primary); border-style:dashed;">
-                <button class="btn-main" onclick="copyRef()" id="btn-copy">COPY LINK</button>
+<div class="ad-zone-top" id="ad-top-slot"></div>
+
+<div class="main-content">
+    <div id="p-home" class="page-view active">
+        <div class="card">
+            <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" style="width:65px; cursor:pointer;" id="smc-trigger">
+            <div style="color:var(--gray); font-size: 0.75rem; margin-top:12px; letter-spacing: 2px;">AVAILABLE DOGE</div>
+            <div id="bal-display" class="bal-val">0.000000</div>
+            
+            <div id="claim-area">
+                <div style="display:flex; justify-content:center; margin:20px 0;"><div class="h-captcha" data-sitekey="50e831e4-919a-4c16-98ce-deaac51632a8" data-callback="onCap" data-theme="dark"></div></div>
+                <button id="btn-claim" class="btn-main" disabled onclick="doClaim()">CLAIM DOGE ⚡</button>
             </div>
-            <div class="card">
-                <div style="color:var(--gray)" id="txt-total-refs">TOTAL REFERRALS</div>
-                <div id="ref-count-display" style="font-size:2rem; font-weight:bold; color:#fff;">0</div>
+
+            <div id="wait-area" class="hidden">
+                <div id="timer-text">00:00</div>
+                <div class="p-bar-bg"><div id="p-bar"></div></div>
+                <p style="color:var(--gray); font-size:0.8rem;">Doge is on the way...</p>
             </div>
         </div>
     </div>
-    <div id="ad-bottom-slot" class="ad-slot"></div>
 
-    <div id="smc-ui" class="smc-panel">
-        <h2 style="color:var(--primary)">DOGE SMC PANEL V8.6 <span id="user-count-badge">Users: 0</span></h2>
-        <label>API Key:</label><input type="text" id="cfg-api" class="v-input">
-        <label>Reward:</label><input type="number" id="cfg-reward" class="v-input" step="0.000001">
-        <label>Ref Bonus:</label><input type="number" id="cfg-ref-bonus" class="v-input" step="0.000001">
-        <label>Wait (Min):</label><input type="number" id="cfg-wait" class="v-input">
-        <label>Min Withdraw:</label><input type="number" id="cfg-min" class="v-input">
-        <label>Ads Top (HTML):</label><textarea id="cfg-ad-top" class="v-input"></textarea>
-        <label>Ads Bottom (HTML):</label><textarea id="cfg-ad-bottom" class="v-input"></textarea>
-        <button class="btn-main" id="btn-save-smc">SAVE DOGE CONFIG</button>
-        <button onclick="document.getElementById('smc-ui').style.display='none'" style="background:red; margin-top:10px;" class="btn-main">CLOSE</button>
+    <div id="p-wallet" class="page-view">
+        <div class="card">
+            <h3 style="margin: 0 0 20px 0; color:var(--primary); letter-spacing: 1px;">WITHDRAW DOGE</h3>
+            <div class="grid-info">
+                <div class="info-item"><span class="info-label">MINIMUM</span><span class="info-value" id="min-txt">0.10</span></div>
+                <div class="info-item"><span class="info-label">FEES</span><span class="info-value" style="color:#14F195">0.00% FREE</span></div>
+            </div>
+            <input type="text" id="w-email" placeholder="FaucetPay Email Address" class="v-input">
+            <input type="number" id="w-amt" placeholder="Amount (DOGE)" class="v-input">
+            <button class="btn-main" onclick="doWithdraw()">WITHDRAW NOW</button>
+            
+            <div class="fpay-banner">
+                <div style="text-align:left;">
+                    <div style="font-size:0.8rem; font-weight:bold;">No Wallet?</div>
+                    <div style="font-size:0.65rem; color:var(--gray);">Create FaucetPay account</div>
+                </div>
+                <a href="https://faucetpay.io/?r=1306122" target="_blank" class="btn-reg">REGISTER</a>
+            </div>
+        </div>
     </div>
 
-    <nav class="nav-bot">
-        <div class="nav-item active" onclick="nav('home', this)"><i class="fas fa-bolt"></i><span id="nav-faucet">Faucet</span></div>
-        <div class="nav-item" onclick="nav('wallet', this)"><i class="fas fa-wallet"></i><span id="nav-wallet">Wallet</span></div>
-        <div class="nav-item" onclick="nav('refs', this)"><i class="fas fa-users"></i><span id="nav-friends">Friends</span></div>
-    </nav>
+    <div id="p-refs" class="page-view">
+        <div class="card">
+            <h3 style="margin: 0 0 20px 0; color:var(--primary); letter-spacing: 1px;">DOGE AFFILIATE</h3>
+            <div class="grid-info">
+                <div class="info-item"><span class="info-label">COMMISSION</span><span class="info-value">10% EACH CLAIM</span></div>
+                <div class="info-item"><span class="info-label">JOIN BONUS</span><span class="info-value" id="ref-bonus-val">0.005</span></div>
+                <div class="info-item"><span class="info-label">TOTAL REFS</span><span class="info-value" id="ref-count">0</span></div>
+                <div class="info-item"><span class="info-label">SYSTEM</span><span class="info-value">INSTANT</span></div>
+            </div>
+            <input type="text" id="ref-link" readonly class="v-input" style="color:var(--primary); border: 1px dashed var(--primary); background: rgba(255,153,0,0.05);">
+            <button class="btn-main" onclick="copyRef()">COPY LINK</button>
+        </div>
+    </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, update, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<div id="smc-ui" class="smc-panel">
+    <h2 style="color:var(--primary)">ADMIN DOGE V8.6</h2>
+    <label>Ad HTML Code:</label><textarea id="cfg-ad" class="v-input" style="height:80px; text-align:left;"></textarea>
+    <label>FP API Key:</label><input type="text" id="cfg-api" class="v-input">
+    <label>Doge Reward:</label><input type="number" id="cfg-reward" class="v-input" step="0.001">
+    <label>Ref Bonus:</label><input type="number" id="cfg-ref-bonus" class="v-input" step="0.001">
+    <label>Wait (Min):</label><input type="number" id="cfg-wait" class="v-input">
+    <label>Min Payout:</label><input type="number" id="cfg-min" class="v-input">
+    <button class="btn-main" onclick="saveSMC()">SAVE SETTINGS</button>
+    <button class="btn-main" onclick="document.getElementById('smc-ui').style.display='none'" style="background:#333; margin-top:10px;">EXIT</button>
+</div>
 
-        const fbCfg = { apiKey: "AIzaSyD74FRYsTCNx8RjMYBdlUKdIs46CgY5154", databaseURL: "https://pinixmining-default-rtdb.firebaseio.com" };
-        const app = initializeApp(fbCfg); const db = getDatabase(app);
-        const tg = window.Telegram?.WebApp;
-        const tgId = tg?.initDataUnsafe?.user?.id || "user_test";
-        const uid = "u_" + tgId;
-        const urlParams = new URLSearchParams(window.location.search);
-        const refBy = urlParams.get('start');
+<nav class="nav-bot">
+    <div class="nav-item active" onclick="nav('home', this)"><i class="fas fa-paw"></i>Faucet</div>
+    <div class="nav-item" onclick="nav('wallet', this)"><i class="fas fa-wallet"></i>Wallet</div>
+    <div class="nav-item" onclick="nav('refs', this)"><i class="fas fa-users"></i>Friends</div>
+</nav>
 
-        let sets = { reward: 0.01, wait: 5, min: 0.5, api: "", adTop: "", adBottom: "", refBonus: 0.001 };
-        let uBal = 0; let tTick; let currentLang = 'en';
-        
-        const userRef = ref(db, 'doge_users/' + uid);
-        const configRef = ref(db, 'doge_config');
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, update, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        const langData = {
-            en: { totalBal: "TOTAL BALANCE (DOGE)", claimBtn: "CLAIM DOGE ⚡", withdrawTitle: "INSTANT WITHDRAW", emailPh: "FaucetPay Email Address", amtPh: "Amount", withdrawBtn: "WITHDRAW", minTxt: "Min:", refTitle: "REFERRAL PROGRAM", earnTxt: "Earn", earnSuffix: "DOGE/Friend", copyBtn: "COPY LINK", totalRefs: "TOTAL REFERRALS", navFaucet: "Faucet", navWallet: "Wallet", navFriends: "Friends", langBtn: "العربية", swalClaim: "Claimed!", swalSuccess: "Success", swalError: "Error", txtNoWallet: "No account?", txtRegNow: "Register here!" },
-            ar: { totalBal: "إجمالي الرصيد (DOGE)", claimBtn: "طالب بـ DOGE ⚡", withdrawTitle: "سحب فوري", emailPh: "بريد فوست باي", amtPh: "الكمية", withdrawBtn: "سحب", minTxt: "الحد الأدنى:", refTitle: "برنامج الإحالة", earnTxt: "اربح", earnSuffix: "DOGE/صديق", copyBtn: "نسخ الرابط", totalRefs: "إجمالي الإحالات", navFaucet: "الصنبور", navWallet: "المحفظة", navFriends: "الأصدقاء", langBtn: "English", swalClaim: "تمت المطالبة!", swalSuccess: "نجاح", swalError: "خطأ", txtNoWallet: "ليس لديك حساب؟", txtRegNow: "سجل من هنا!" }
-        };
+    const firebaseConfig = { 
+      apiKey: "AIzaSyBq1GLYT2Pmnb-SzzBtICbx2jnWveobIVo",
+      authDomain: "beeclaimer-e53c7.firebaseapp.com",
+      projectId: "beeclaimer-e53c7",
+      storageBucket: "beeclaimer-e53c7.firebasestorage.app",
+      messagingSenderId: "242649186878",
+      appId: "1:242649186878:web:53a76358817cb4a722476f",
+      measurementId: "G-MSZ4EMR204",
+      databaseURL: "https://beeclaimer-e53c7-default-rtdb.firebaseio.com" 
+    };
 
-        function showPop(title, text, icon, timer = null) { Swal.fire({ title, text, icon, timer, customClass: { popup: 'swal2-popup-custom' } }); }
-        window.toggleLang = () => { currentLang = currentLang === 'en' ? 'ar' : 'en'; applyLang(); };
-        window.onCapSolved = () => { document.getElementById('btn-claim').disabled = false; };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const tgId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "user_test";
+    const uid = "u_doge_" + tgId;
+    const refBy = new URLSearchParams(window.location.search).get('start');
 
-        function applyLang() {
-            const d = langData[currentLang];
-            document.getElementById('main-html').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('lang-btn').innerText = d.langBtn;
-            document.getElementById('txt-total-bal').innerText = d.totalBal;
-            document.getElementById('btn-claim').innerText = d.claimBtn;
-            document.getElementById('txt-withdraw-title').innerText = d.withdrawTitle;
-            document.getElementById('w-email').placeholder = d.emailPh;
-            document.getElementById('w-amt').placeholder = d.amtPh;
-            document.getElementById('btn-withdraw').innerText = d.withdrawBtn;
-            document.getElementById('txt-min').innerText = d.minTxt;
-            document.getElementById('txt-ref-title').innerText = d.refTitle;
-            document.getElementById('txt-earn').innerText = d.earnTxt;
-            document.getElementById('txt-earn-suffix').innerText = d.earnSuffix;
-            document.getElementById('btn-copy').innerText = d.copyBtn;
-            document.getElementById('txt-total-refs').innerText = d.totalRefs;
-            document.getElementById('nav-faucet').innerText = d.navFaucet;
-            document.getElementById('nav-wallet').innerText = d.navWallet;
-            document.getElementById('nav-friends').innerText = d.navFriends;
-            document.getElementById('txt-no-wallet').innerText = d.txtNoWallet;
-            document.getElementById('txt-reg-now').innerText = d.txtRegNow;
-        }
+    let sets = { reward: 0.01, wait: 5, min: 0.1, api: "", adCode: "", refBonus: 0.005 };
+    let uBal = 0; let tTick;
 
-        onValue(configRef, (s) => {
-            if(s.exists()) {
-                sets = s.val();
-                document.getElementById('min-text').innerText = sets.min;
-                document.getElementById('ref-bonus-text').innerText = sets.refBonus;
-                document.getElementById('cfg-api').value = sets.api || "";
-                document.getElementById('cfg-reward').value = sets.reward;
-                document.getElementById('cfg-ref-bonus').value = sets.refBonus;
-                document.getElementById('cfg-wait').value = sets.wait;
-                document.getElementById('cfg-min').value = sets.min;
-                document.getElementById('cfg-ad-top').value = sets.adTop || "";
-                document.getElementById('cfg-ad-bottom').value = sets.adBottom || "";
-                const top = document.getElementById('ad-top-slot');
-                if(sets.adTop && sets.adTop !== "") { top.innerHTML = sets.adTop; top.style.display = 'flex'; } else { top.style.display = 'none'; }
-                const bot = document.getElementById('ad-bottom-slot');
-                if(sets.adBottom && sets.adBottom !== "") { bot.innerHTML = sets.adBottom; bot.style.display = 'flex'; } else { bot.style.display = 'none'; }
-            }
-        });
+    const userRef = ref(db, 'doge_users/' + uid);
+    const configRef = ref(db, 'doge_config');
 
-        onValue(ref(db, 'doge_users'), (snapshot) => { if(snapshot.exists()) { document.getElementById('user-count-badge').innerText = "Users: " + Object.keys(snapshot.val()).length; } });
+    onValue(configRef, (s) => { 
+        if(s.exists()) { 
+            sets = s.val(); 
+            document.getElementById('min-txt').innerText = sets.min;
+            document.getElementById('ref-bonus-val').innerText = sets.refBonus;
+            document.getElementById('cfg-ad').value = sets.adCode || "";
+            document.getElementById('cfg-api').value = sets.api || "";
+            document.getElementById('cfg-reward').value = sets.reward || 0.01;
+            document.getElementById('cfg-ref-bonus').value = sets.refBonus || 0.005;
+            document.getElementById('cfg-wait').value = sets.wait || 5;
+            document.getElementById('cfg-min').value = sets.min || 0.1;
+            if(sets.adCode) document.getElementById('ad-top-slot').innerHTML = sets.adCode;
+        } 
+    });
 
-        get(userRef).then(async (s) => {
-            if(!s.exists()) {
-                let initialData = { balance: 0, last: 0, refCount: 0 };
-                if(refBy && refBy !== tgId.toString()) {
-                    const bossRef = ref(db, 'doge_users/u_' + refBy);
-                    const bossSnap = await get(bossRef);
-                    if(bossSnap.exists()) {
-                        const bns = parseFloat(sets.refBonus || 0.01);
-                        await update(bossRef, { balance: (bossSnap.val().balance || 0) + bns, refCount: (bossSnap.val().refCount || 0) + 1 });
-                    }
+    onValue(userRef, async (s) => {
+        if(!s.exists()) {
+            await set(userRef, { balance: 0, last: 0, refCount: 0 });
+            if(refBy && refBy !== tgId.toString()) {
+                const bRef = ref(db, 'doge_users/u_doge_' + refBy);
+                const bSnap = await get(bRef);
+                if(bSnap.exists()) {
+                    await update(bRef, { balance: (bSnap.val().balance||0) + parseFloat(sets.refBonus), refCount: (bSnap.val().refCount||0) + 1 });
                 }
-                await set(userRef, initialData);
             }
-        });
-
-        onValue(userRef, (s) => {
-            const d = s.val() || { balance: 0, last: 0, refCount: 0 };
-            uBal = d.balance || 0;
-            document.getElementById('bal-display').innerText = uBal.toFixed(4);
-            document.getElementById('ref-link').value = "https://t.me/BeeFaucetBot?start=" + tgId;
-            document.getElementById('ref-count-display').innerText = d.refCount || 0;
-            runTimer(d.last);
-        });
-
-        function runTimer(last) {
-            clearInterval(tTick);
-            tTick = setInterval(() => {
-                const diff = (sets.wait * 60000) - (Date.now() - last);
-                if(diff > 0) {
-                    document.getElementById('claim-area').classList.add('hidden');
-                    document.getElementById('wait-area').classList.remove('hidden');
-                    const m = Math.floor(diff/60000), s = Math.floor((diff%60000)/1000);
-                    document.getElementById('timer-text').innerText = `${m}:${s<10?'0'+s:s}`;
-                    document.getElementById('p-bar').style.width = (( (sets.wait*60000)-diff )/(sets.wait*60000)*100) + "%";
-                } else { document.getElementById('claim-area').classList.remove('hidden'); document.getElementById('wait-area').classList.add('hidden'); }
-            }, 1000);
+        } else {
+            const d = s.val(); uBal = d.balance || 0;
+            document.getElementById('bal-display').innerText = uBal.toFixed(6);
+            document.getElementById('ref-count').innerText = d.refCount || 0;
+            document.getElementById('ref-link').value = `https://t.me/BeeDogeBot?start=${tgId}`;
+            runTimer(d.last || 0);
         }
+    });
 
-        document.getElementById('btn-claim').onclick = async () => {
-            if(hcaptcha.getResponse() === "") return;
-            await update(userRef, { balance: uBal + parseFloat(sets.reward), last: Date.now() });
-            hcaptcha.reset(); document.getElementById('btn-claim').disabled = true;
-            showPop(langData[currentLang].swalClaim, '', 'success', 2000);
+    function runTimer(last) {
+        clearInterval(tTick);
+        const waitMs = Number(sets.wait) * 60000;
+        const tick = () => {
+            const diff = waitMs - (Date.now() - last);
+            if(last > 0 && diff > 0) {
+                document.getElementById('claim-area').classList.add('hidden');
+                document.getElementById('wait-area').classList.remove('hidden');
+                const m = Math.floor(diff/60000); const s = Math.floor((diff%60000)/1000);
+                document.getElementById('timer-text').innerText = `${m}:${s<10?'0'+s:s}`;
+                document.getElementById('p-bar').style.width = ((waitMs-diff)/waitMs*100) + "%";
+            } else {
+                document.getElementById('wait-area').classList.add('hidden');
+                document.getElementById('claim-area').classList.remove('hidden');
+                clearInterval(tTick);
+            }
         };
+        tick(); tTick = setInterval(tick, 1000);
+    }
 
-        document.getElementById('btn-withdraw').onclick = async () => {
-            const email = document.getElementById('w-email').value;
-            const amt = parseFloat(document.getElementById('w-amt').value);
-            if(!email || isNaN(amt) || amt < sets.min || amt > uBal) return showPop('Error', 'Invalid Data', 'error');
-            try {
-                const res = await fetch('https://faucetpay.io/api/v1/send', { method: 'POST', body: new URLSearchParams({ api_key: sets.api, currency: 'DOGE', amount: (amt * 100000000).toFixed(0), to: email }) });
-                const r = await res.json();
-                if(r.status === 200) { await update(userRef, { balance: uBal - amt }); showPop('Success', 'Sent!', 'success'); } else showPop('Error', r.message, 'error');
-            } catch(e) { showPop('Error', 'Connection failed', 'warning'); }
-        };
+    window.onCap = () => { document.getElementById('btn-claim').disabled = false; };
+    window.doClaim = async () => {
+        document.getElementById('btn-claim').disabled = true;
+        await update(userRef, { balance: uBal + parseFloat(sets.reward), last: Date.now() });
+        hcaptcha.reset();
+        Swal.fire({ title: 'Doge Claimed!', text: `+${sets.reward} DOGE added`, icon: 'success', timer: 2000, showConfirmButton: false });
+    };
 
-        window.copyRef = () => { const el = document.getElementById("ref-link"); el.select(); document.execCommand("copy"); showPop('Copied!', '', 'success', 1000); };
-        window.nav = (p, el) => { document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden')); document.getElementById('p-'+p).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); };
-        document.getElementById('btn-save-smc').onclick = async () => { await set(configRef, { api: document.getElementById('cfg-api').value, reward: document.getElementById('cfg-reward').value, refBonus: document.getElementById('cfg-ref-bonus').value, wait: document.getElementById('cfg-wait').value, min: document.getElementById('cfg-min').value, adTop: document.getElementById('cfg-ad-top').value, adBottom: document.getElementById('cfg-ad-bottom').value }); showPop('Saved', '', 'success'); };
-        let gate = 0; document.getElementById('smc-trigger').onclick = () => { gate++; if(gate >= 5) { Swal.fire({ title: 'Admin', input: 'password', customClass: { popup: 'swal2-popup-custom' } }).then(res => { if(res.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block'; }); gate=0; } };
-        applyLang();
-    </script>
+    window.doWithdraw = async () => {
+        const email = document.getElementById('w-email').value;
+        const amt = parseFloat(document.getElementById('w-amt').value);
+        if(!email || isNaN(amt) || amt < sets.min || amt > uBal) return Swal.fire('Error', 'Invalid amount', 'error');
+        Swal.fire({ title: 'Processing...', didOpen: () => { Swal.showLoading(); } });
+        try {
+            const res = await fetch('https://faucetpay.io/api/v1/send', { 
+                method: 'POST', 
+                body: new URLSearchParams({ api_key: sets.api, currency: 'DOGE', amount: (amt*100000000).toFixed(0), to: email }) 
+            });
+            const r = await res.json();
+            if(r.status === 200) { 
+                await update(userRef, { balance: uBal - amt });
+                Swal.fire('Sent!', 'DOGE sent to FaucetPay', 'success'); 
+            } else { Swal.fire('Error', r.message, 'error'); }
+        } catch(e) { Swal.fire('Error', 'API error', 'error'); }
+    };
+
+    window.nav = (p, el) => {
+        document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+        document.getElementById('p-'+p).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+    };
+
+    window.copyRef = () => {
+        const el = document.getElementById('ref-link'); el.select(); document.execCommand('copy');
+        Swal.fire({ title:'Copied!', icon:'success', timer:1500, showConfirmButton: false });
+    };
+
+    window.saveSMC = async () => {
+        await update(configRef, {
+            adCode: document.getElementById('cfg-ad').value,
+            api: document.getElementById('cfg-api').value,
+            reward: parseFloat(document.getElementById('cfg-reward').value),
+            refBonus: parseFloat(document.getElementById('cfg-ref-bonus').value),
+            wait: parseInt(document.getElementById('cfg-wait').value),
+            min: parseFloat(document.getElementById('cfg-min').value)
+        });
+        Swal.fire('Saved!', 'Doge Settings Updated', 'success');
+    };
+
+    let g = 0;
+    document.getElementById('smc-trigger').onclick = () => { 
+        g++;
+        if(g>=5) { 
+            Swal.fire({
+                title: 'Admin Access',
+                input: 'password',
+                inputPlaceholder: 'Enter Password'
+            }).then((r) => {
+                if (r.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block';
+                else if(r.value) Swal.fire('Error', 'Wrong Password', 'error');
+            });
+            g=0; 
+        }
+    };
+</script>
 </body>
-                    </html>
-                        
+</html>
