@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TON Platinum 2026 - Official</title>
+    <title>TON Platinum 2026 - BeeClaimer</title>
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -117,8 +117,12 @@
     const firebaseConfig = { databaseURL: "https://ton-platinum-2026-default-rtdb.firebaseio.com/" };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const tgId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "dev_user";
+    
+    // بيانات تليجرام
+    const tg = window.Telegram.WebApp;
+    const tgId = tg.initDataUnsafe?.user?.id || "dev_user";
     const uid = "u_" + tgId;
+    const startParam = tg.initDataUnsafe?.start_param; // لجلب معرف الداعي
 
     let sets = { reward: 0.001, wait: 20, min: 0.1, api: "", adCode: "" };
     let uBal = 0; let tTick; let currentLang = 'en';
@@ -154,6 +158,19 @@
         document.querySelector('.t-nav-refs').innerText = T.navR;
     };
 
+    // نظام فحص وتسجيل الإحالات
+    async function checkReferral() {
+        const snapshot = await get(userRef);
+        if (!snapshot.exists() && startParam && startParam != tgId) {
+            const inviterRef = ref(db, 'users/u_' + startParam);
+            const inviterSnap = await get(inviterRef);
+            if (inviterSnap.exists()) {
+                const currentRefCount = inviterSnap.val().refCount || 0;
+                await update(inviterRef, { refCount: currentRefCount + 1 });
+            }
+        }
+    }
+
     onValue(configRef, (s) => { 
         if(s.exists()) { 
             sets = s.val(); 
@@ -168,12 +185,15 @@
     });
 
     onValue(userRef, async (s) => {
-        if(!s.exists()) await set(userRef, { balance: 0, last: 0, refCount: 0 });
-        else {
+        if(!s.exists()) {
+            await set(userRef, { balance: 0, last: 0, refCount: 0 });
+            checkReferral(); // فحص الإحالة للمستخدم الجديد
+        } else {
             const d = s.val(); uBal = d.balance || 0;
             document.getElementById('bal-display').innerText = uBal.toFixed(6);
             document.getElementById('ref-count').innerText = d.refCount || 0;
-            document.getElementById('ref-link').value = `https://t.me/YOUR_BOT_NAME?start=${tgId}`;
+            // استخدام رابط startapp الصحيح مع BeeClaimer_bot
+            document.getElementById('ref-link').value = `https://t.me/BeeClaimer_bot?startapp=${tgId}`;
             runTimer(d.last || 0);
         }
     });
@@ -203,8 +223,6 @@
     window.doClaim = async () => {
         const btn = document.getElementById('btn-claim');
         btn.disabled = true;
-
-        // التحقق الصارم من Firebase قبل إضافة الرصيد
         const snapshot = await get(userRef);
         const userData = snapshot.val();
         const lastClaim = userData.last || 0;
@@ -212,39 +230,30 @@
         const now = Date.now();
 
         if (lastClaim > 0 && (now - lastClaim) < waitMs) {
-            Swal.fire({
-                title: currentLang === 'en' ? 'Security Check' : 'تحقق الأمان',
-                text: currentLang === 'en' ? 'Time not finished yet!' : 'الوقت لم ينتهِ بعد!',
-                icon: 'warning'
-            });
+            Swal.fire({ title: currentLang === 'en'?'Security Check':'تحقق الأمان', text: currentLang === 'en'?'Wait for timer!':'انتظر انتهاء الوقت!', icon: 'warning' });
             runTimer(lastClaim);
             return;
         }
 
         try {
-            await update(userRef, { 
-                balance: uBal + parseFloat(sets.reward), 
-                last: now 
-            });
+            await update(userRef, { balance: uBal + parseFloat(sets.reward), last: now });
             hcaptcha.reset();
-            Swal.fire({ title: currentLang === 'en'?'TON Claimed!':'تم المطالبة بنجاح', icon: 'success', timer: 1500, showConfirmButton: false });
+            Swal.fire({ title: currentLang === 'en'?'TON Claimed!':'تمت المطالبة!', icon: 'success', timer: 1500, showConfirmButton: false });
             runTimer(now);
-        } catch(e) {
-            btn.disabled = false;
-        }
+        } catch(e) { btn.disabled = false; }
     };
 
     window.doWithdraw = async () => {
         const email = document.getElementById('w-email').value;
         const amt = parseFloat(document.getElementById('w-amt').value);
-        if(!email || isNaN(amt) || amt < sets.min || amt > uBal) return Swal.fire('Error', 'Invalid details', 'error');
+        if(!email || isNaN(amt) || amt < sets.min || amt > uBal) return Swal.fire('Error', 'Invalid data', 'error');
         Swal.fire({ title: 'Processing...', didOpen: () => { Swal.showLoading(); } });
         try {
             const res = await fetch('https://faucetpay.io/api/v1/send', { method: 'POST', body: new URLSearchParams({ api_key: sets.api, currency: 'TON', amount: (amt*100000000).toFixed(0), to: email }) });
             const r = await res.json();
-            if(r.status === 200) { await update(userRef, { balance: uBal - amt }); Swal.fire('Success!', 'TON sent to your FaucetPay', 'success'); }
+            if(r.status === 200) { await update(userRef, { balance: uBal - amt }); Swal.fire('Success!', 'Sent to FaucetPay', 'success'); }
             else Swal.fire('Error', r.message, 'error');
-        } catch(e) { Swal.fire('Error', 'Connection failed', 'error'); }
+        } catch(e) { Swal.fire('Error', 'API Error', 'error'); }
     };
 
     window.nav = (p, el) => {
@@ -267,9 +276,10 @@
     let g = 0;
     document.getElementById('smc-trigger').onclick = () => { 
         g++; if(g>=5) { 
-            Swal.fire({ title: 'Password', input: 'password' }).then((r) => { if (r.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block'; g=0; });
+            Swal.fire({ title: 'Admin', input: 'password' }).then((r) => { if (r.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block'; g=0; });
         }
     };
+    tg.expand();
 </script>
 </body>
 </html>
