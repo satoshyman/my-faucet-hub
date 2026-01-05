@@ -1,212 +1,275 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" id="main-html">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BeeClaimer- Elite V11</title>
+    <title>TON Platinum 2026 - Official</title>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800;900&display=swap');
-        :root { --bg: #010101; --card: rgba(15, 15, 15, 0.98); --primary: #0088cc; --gold: #ffd700; --line: rgba(255,255,255,0.06); }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body, html { height: 100dvh; width: 100%; overflow: hidden; background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; }
-        
-        /* تأثير الهالات الضوئية */
-        .glow-bg { position: absolute; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none; }
-        .glow-1, .glow-2 { position: absolute; width: 350px; height: 350px; border-radius: 50%; filter: blur(130px); opacity: 0.12; animation: moveGlow 15s infinite alternate; }
-        .glow-1 { background: var(--primary); top: -50px; left: -50px; }
-        .glow-2 { background: var(--gold); bottom: -50px; right: -50px; animation-delay: -7s; }
-        @keyframes moveGlow { 0% { transform: translate(0, 0); } 100% { transform: translate(120px, 120px); } }
-
-        #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
-        .main-wrapper { position: relative; z-index: 2; height: 100dvh; display: flex; flex-direction: column; padding: 20px; }
-        
-        /* الهيدر */
-        .header { text-align: center; margin-bottom: 30px; margin-top: 60px; width: 100%; }
-        .title { font-size: 38px; font-weight: 900; background: linear-gradient(135deg, #fff 40%, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .subtitle { font-size: 11px; color: var(--primary); letter-spacing: 3px; font-weight: 800; margin-top: 5px; opacity: 0.8; }
-        
-        /* الكروت */
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; flex: 1; align-content: center; max-width: 500px; margin: 0 auto; width: 100%; }
-        .coin-card { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 25px 15px; text-align: center; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.4s; backdrop-filter: blur(12px); }
-        .coin-card img { width: 50px; height: 50px; margin-bottom: 12px; }
-        .coin-name { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-        .coin-status { font-size: 9px; background: rgba(20, 241, 149, 0.1); color: #14f195; padding: 4px 10px; border-radius: 10px; font-weight: 800; }
-        
-        /* الأزرار العلوية */
-        .lang-switch { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; border: 1px solid var(--line); z-index: 10; }
-        .faq-btn { position: absolute; top: 20px; left: 20px; color: var(--primary); font-size: 24px; cursor: pointer; z-index: 10; animation: pulse 2s infinite; }
-
-        /* نافذة FAQ الاحترافية الشاملة */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); backdrop-filter: blur(25px); overflow-y: auto; }
-        .modal-content { background: var(--card); margin: 50px auto; padding: 30px; border-radius: 35px; border: 1px solid var(--line); width: 90%; max-width: 500px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .close-faq { float: right; color: #fff; font-size: 32px; cursor: pointer; opacity: 0.5; margin-top: -10px; }
-        .faq-header { text-align: center; margin-bottom: 25px; }
-        .faq-header i { font-size: 40px; color: var(--gold); margin-bottom: 10px; }
-        .faq-header h2 { font-size: 24px; font-weight: 900; color: var(--primary); }
-        
-        .faq-section { margin-bottom: 20px; background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px; border-left: 3px solid var(--primary); }
-        .faq-q { color: var(--gold); font-size: 15px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
-        .faq-a { color: #ccc; font-size: 12.5px; line-height: 1.6; }
-
-        /* بانر التلجرام ومكان الإعلان */
-        .tg-banner { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 15px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
-        .tg-btn { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 12px; font-size: 12px; font-weight: 800; text-decoration: none; }
-        .ads-container { width: 100%; margin-top: 15px; display: flex; justify-content: center; align-items: center; min-height: 50px; background: rgba(255, 255, 255, 0.02); border-radius: 15px; border: 1px dashed rgba(255, 255, 255, 0.1); color: #444; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        :root { --bg: #050505; --card: #111; --primary: #0088CC; --secondary: #14F195; --gray: #a0a0a0; --line: #222; --glass: rgba(255, 255, 255, 0.05); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        [lang="ar"] { direction: rtl; text-align: right; }
+        .lang-switch { position: fixed; top: 15px; right: 15px; background: var(--glass); border: 1px solid var(--line); color: #fff; padding: 5px 12px; border-radius: 10px; cursor: pointer; z-index: 1001; font-size: 0.8rem; }
+        .ad-zone-top { width: 100%; height: 85px; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
+        .main-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 20px; position: relative; bottom: 15px; }
+        .page-view { width: 100%; max-width: 420px; display: none; flex-direction: column; }
+        .page-view.active { display: flex; animation: slideUp 0.4s ease-out; }
+        .card { background: var(--card); border-radius: 35px; padding: 25px 20px; border: 1px solid var(--line); text-align: center; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.9); }
+        .bal-val { font-size: 3rem; font-weight: 900; color: var(--primary); margin: 5px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px rgba(0, 136, 204, 0.3); }
+        .btn-main { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--primary); color: #fff; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 15px; }
+        .btn-main:disabled { opacity: 0.2; filter: grayscale(1); }
+        .v-input { width: 100%; padding: 16px; background: #000; border: 1px solid #333; color: #fff; border-radius: 20px; margin-bottom: 12px; text-align: center; font-size: 1rem; }
+        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .info-item { background: var(--glass); padding: 12px; border-radius: 18px; border: 1px solid #222; }
+        .info-label { display: block; font-size: 0.65rem; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; }
+        .info-value { display: block; font-size: 0.9rem; font-weight: bold; color: var(--primary); }
+        .fpay-banner { background: linear-gradient(90deg, #1a1a1a, #000); border: 1px dashed var(--primary); border-radius: 20px; padding: 15px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .btn-reg { background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 0.75rem; font-weight: bold; }
+        .nav-bot { height: 95px; background: #000; display: flex; border-top: 1px solid var(--line); padding-bottom: 25px; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--gray); cursor: pointer; font-size: 0.8rem; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item i { font-size: 1.5rem; margin-bottom: 6px; }
+        .smc-panel { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; padding: 25px; overflow-y: auto; }
+        #p-bar { height: 8px; background: #222; border-radius: 10px; width: 80%; margin: 15px auto; overflow: hidden; }
+        #p-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: 1s linear; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body>
-    <div class="glow-bg"><div class="glow-1"></div><div class="glow-2"></div></div>
-    <canvas id="particles-js"></canvas>
-    
-    <div class="main-wrapper">
-        <div class="faq-btn" onclick="openFaq()"><i class="fas fa-question-circle"></i></div>
-        <div class="lang-switch" onclick="toggleLang()" id="lang-btn">العربية</div>
+<body lang="en">
 
-        <div class="header animate__animated animate__fadeInDown">
-            <div class="title" id="txt-title">BEE CLAIMER</div>
-            <div class="subtitle" id="txt-subtitle">FREE EARNING PLATFORM</div>
-        </div>
+<button class="lang-switch" onclick="toggleLang()">AR/EN</button>
+<div class="ad-zone-top" id="ad-top-slot"></div>
 
-        <div class="grid-container">
-            <a href="Ton.html" class="coin-card animate__animated animate__zoomIn">
-                <img src="https://xoxminer.netlify.app" alt="TON">
-                <div class="coin-name">TON</div>
-                <div class="coin-status" id="txt-active-1">ACTIVE</div>
-            </a>
-            <a href="Sol.html" class="coin-card animate__animated animate__zoomIn">
-                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="SOL">
-                <div class="coin-name">SOLANA</div>
-                <div class="coin-status" id="txt-active-2">ACTIVE</div>
-            </a>
-            <a href="Doge.html" class="coin-card animate__animated animate__zoomIn">
-                <img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png" alt="DOGE">
-                <div class="coin-name">DOGECOIN</div>
-                <div class="coin-status" id="txt-active-3">ACTIVE</div>
-            </a>
-            <a href="Bnb.html" class="coin-card animate__animated animate__zoomIn">
-                <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
-                <div class="coin-name">BNB SMART</div>
-                <div class="coin-status" id="txt-active-4">ACTIVE</div>
-            </a>
-        </div>
-
-        <div class="tg-banner animate__animated animate__fadeInUp">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <i class="fab fa-telegram" style="font-size:24px; color:var(--primary)"></i>
-                <div>
-                    <h3 style="font-size:12px;" id="txt-tg-title">OFFICIAL</h3>
-                    <p style="font-size:10px; color:#777;" id="txt-tg-desc">Updates & Payments</p>
-                </div>
+<div class="main-content">
+    <div id="p-home" class="page-view active">
+        <div class="card">
+            <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" style="width:60px;" id="smc-trigger">
+            <div class="t-bal-label" style="color:var(--gray); font-size: 0.75rem; margin-top:10px;">AVAILABLE TON</div>
+            <div id="bal-display" class="bal-val">0.000000</div>
+            <div id="claim-area">
+                <div style="display:flex; justify-content:center; margin:15px 0;"><div class="h-captcha" data-sitekey="50e831e4-919a-4c16-98ce-deaac51632a8" data-callback="onCap" data-theme="dark"></div></div>
+                <button id="btn-claim" class="btn-main t-claim-btn" disabled onclick="doClaim()">CLAIM TON ⚡</button>
             </div>
-            <a href="https://t.me/BeeClaimer" class="tg-btn" id="txt-tg-btn">JOIN</a>
-        </div>
-
-        <div class="ads-container"><div id="frame" style="width: 320px;margin: auto;z-index: 99998;height: auto">
-          <iframe data-aa='2423157' src='//ad.a-ads.com/2423157/?size=320x50'
-                            style='border:0; padding:0; width:320px; height:50px; overflow:hidden;display: block;margin: auto'></iframe>
-        </div></div>
-    </div>
-
-    <div id="faqModal" class="modal">
-        <div class="modal-content animate__animated animate__zoomIn">
-            <span class="close-faq" onclick="closeFaq()">&times;</span>
-            <div class="faq-header">
-                <i class="fas fa-rocket"></i>
-                <h2 id="faq-h">Help Center</h2>
-            </div>
-
-            <div class="faq-section">
-                <div class="faq-q"><i class="fas fa-info-circle"></i> <span id="faq-q1-t">What is BeeClaimer?</span></div>
-                <div class="faq-a" id="faq-a1-d">It is an elite decentralized platform that allows users to claim daily rewards in multiple cryptocurrencies (TON, SOL, DOGE, BNB) safely and instantly.</div>
-            </div>
-
-            <div class="faq-section">
-                <div class="faq-q"><i class="fas fa-coins"></i> <span id="faq-q2-t">Supported Coins</span></div>
-                <div class="faq-a" id="faq-a2-d">We currently support 4 major networks: TON (The Open Network), Solana (SOL), Dogecoin (DOGE), and Binance Smart Chain (BNB). More coins will be added soon.</div>
-            </div>
-
-            <div class="faq-section">
-                <div class="faq-q"><i class="fas fa-wallet"></i> <span id="faq-q3-t">How to Withdrawal?</span></div>
-                <div class="faq-a" id="faq-a3-d">Once you reach the minimum threshold, click "Withdraw" inside the coin page. Enter your wallet address, and the payment will be sent automatically.</div>
-            </div>
-
-            <div class="faq-section">
-                <div class="faq-q"><i class="fab fa-telegram"></i> <span id="faq-q4-t">Official Channel</span></div>
-                <div class="faq-a" id="faq-a4-d">Join @BeeClaimer on Telegram to get daily updates, proof of payments, and instant support from our team.</div>
-            </div>
-
-            <div style="text-align: center; margin-top: 20px;">
-                <button onclick="closeFaq()" style="background:var(--primary); border:none; color:#fff; padding:10px 30px; border-radius:15px; font-weight:800; cursor:pointer;" id="faq-close-btn">Got it!</button>
+            <div id="wait-area" class="hidden">
+                <div id="timer-text" style="font-size:2.5rem; font-weight:900; color:var(--primary); margin:10px 0;">20:00</div>
+                <div id="p-bar"><div id="p-bar-fill"></div></div>
+                <p class="t-sync-text" style="color:var(--gray); font-size:0.8rem;">Next Claim in...</p>
             </div>
         </div>
     </div>
 
-    <script>
-        const canvas = document.getElementById('particles-js');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        class Particle {
-            constructor() { this.init(); }
-            init() {
-                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5; this.speedX = Math.random() * 0.4 - 0.2; this.speedY = Math.random() * 0.4 - 0.2; this.opacity = Math.random() * 0.5;
-            }
-            update() { this.x += this.speedX; this.y += this.speedY; if (this.x < 0 || this.x > canvas.width) this.speedX *= -1; if (this.y < 0 || this.y > canvas.height) this.speedY *= -1; }
-            draw() { ctx.fillStyle = `rgba(255,255,255,${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+    <div id="p-wallet" class="page-view">
+        <div class="card">
+            <h3 class="t-withdraw-title" style="color:var(--primary)">WITHDRAW TON</h3>
+            <div class="grid-info">
+                <div class="info-item"><span class="info-label t-min-label">MINIMUM</span><span class="info-value" id="min-txt">0.1</span></div>
+                <div class="info-item"><span class="info-label">NETWORK</span><span class="info-value" style="color:var(--secondary)">TON-FP</span></div>
+            </div>
+            <input type="text" id="w-email" placeholder="FaucetPay Email" class="v-input">
+            <input type="number" id="w-amt" placeholder="Amount (TON)" class="v-input">
+            <button class="btn-main t-withdraw-btn" onclick="doWithdraw()">WITHDRAW NOW</button>
+            <div class="fpay-banner">
+                <div style="text-align:left;"><div class="t-fpay-q" style="font-size:0.8rem; font-weight:bold;">No Wallet?</div><div class="t-fpay-a" style="font-size:0.65rem; color:var(--gray);">Get a FaucetPay account</div></div>
+                <a href="https://faucetpay.io/?r=362774" target="_blank" class="btn-reg t-reg-btn">REGISTER</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="p-refs" class="page-view">
+        <div class="card">
+            <h3 class="t-ref-title" style="color:var(--primary)">AFFILIATE PROGRAM</h3>
+            <div class="grid-info">
+                <div class="info-item"><span class="info-label t-comm-label">COMMISSION</span><span class="info-value">10%</span></div>
+                <div class="info-item"><span class="info-label t-total-ref-label">TOTAL REFS</span><span class="info-value" id="ref-count">0</span></div>
+            </div>
+            <p style="font-size:0.75rem; color:var(--gray);" class="t-ref-desc">Share link & earn on every claim</p>
+            <input type="text" id="ref-link" readonly class="v-input" style="font-size: 0.8rem; border:1px dashed var(--primary); background:rgba(0,136,204,0.05);">
+            <button class="btn-main t-copy-btn" onclick="copyRef()">COPY LINK</button>
+        </div>
+    </div>
+</div>
+
+<div id="smc-ui" class="smc-panel">
+    <h2 style="color:var(--primary)">ADMIN SETTINGS 2026</h2>
+    <label>Ad HTML Code:</label><textarea id="cfg-ad" class="v-input" style="height:80px;"></textarea>
+    <label>FaucetPay API Key:</label><input type="text" id="cfg-api" class="v-input">
+    <label>TON Reward:</label><input type="number" id="cfg-reward" class="v-input" step="0.0001">
+    <label>Wait (Min):</label><input type="number" id="cfg-wait" class="v-input" value="20">
+    <label>Min Withdraw:</label><input type="number" id="cfg-min" class="v-input">
+    <button class="btn-main" onclick="saveSMC()">SAVE SETTINGS</button>
+    <button class="btn-main" onclick="document.getElementById('smc-ui').style.display='none'" style="background:#333;">EXIT</button>
+</div>
+
+<nav class="nav-bot">
+    <div class="nav-item active" onclick="nav('home', this)"><i class="fas fa-gem"></i><span class="t-nav-faucet">Faucet</span></div>
+    <div class="nav-item" onclick="nav('wallet', this)"><i class="fas fa-wallet"></i><span class="t-nav-wallet">Wallet</span></div>
+    <div class="nav-item" onclick="nav('refs', this)"><i class="fas fa-users"></i><span class="t-nav-refs">Friends</span></div>
+</nav>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, update, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = { databaseURL: "https://ton-platinum-2026-default-rtdb.firebaseio.com/" };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const tgId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "dev_user";
+    const uid = "u_" + tgId;
+
+    let sets = { reward: 0.001, wait: 20, min: 0.1, api: "", adCode: "" };
+    let uBal = 0; let tTick; let currentLang = 'en';
+
+    const userRef = ref(db, 'users/' + uid);
+    const configRef = ref(db, 'config');
+
+    const trans = {
+        en: { balLabel: "AVAILABLE TON", claimBtn: "CLAIM TON ⚡", sync: "Next Claim in...", withTitle: "WITHDRAW TON", minLab: "MINIMUM", withBtn: "WITHDRAW NOW", fpayQ: "No Wallet?", fpayA: "Get a FaucetPay account", reg: "REGISTER", refTitle: "AFFILIATE PROGRAM", comm: "COMMISSION", tRef: "TOTAL REFS", refDesc: "Share link & earn on every claim", copy: "COPY LINK", navF: "Faucet", navW: "Wallet", navR: "Friends" },
+        ar: { balLabel: "رصيد تون المتاح", claimBtn: "مطالبة TON ⚡", sync: "المطالبة التالية خلال...", withTitle: "سحب العملات", minLab: "الحد الأدنى", withBtn: "اسحب الآن", fpayQ: "ليس لديك محفظة؟", fpayA: "سجل في فوست باي الآن", reg: "تسجيل", refTitle: "برنامج الإحالة", comm: "العمولة", tRef: "إجمالي الإحالات", refDesc: "شارك الرابط واربح مع كل مطالبة", copy: "نسخ الرابط", navF: "الصنبور", navW: "المحفظة", navR: "الأصدقاء" }
+    };
+
+    window.toggleLang = () => {
+        currentLang = currentLang === 'en' ? 'ar' : 'en';
+        document.body.lang = currentLang;
+        const T = trans[currentLang];
+        document.querySelector('.t-bal-label').innerText = T.balLabel;
+        document.querySelector('.t-claim-btn').innerText = T.claimBtn;
+        document.querySelector('.t-sync-text').innerText = T.sync;
+        document.querySelector('.t-withdraw-title').innerText = T.withTitle;
+        document.querySelector('.t-min-label').innerText = T.minLab;
+        document.querySelector('.t-withdraw-btn').innerText = T.withBtn;
+        document.querySelector('.t-fpay-q').innerText = T.fpayQ;
+        document.querySelector('.t-fpay-a').innerText = T.fpayA;
+        document.querySelector('.t-reg-btn').innerText = T.reg;
+        document.querySelector('.t-ref-title').innerText = T.refTitle;
+        document.querySelector('.t-comm-label').innerText = T.comm;
+        document.querySelector('.t-total-ref-label').innerText = T.tRef;
+        document.querySelector('.t-ref-desc').innerText = T.refDesc;
+        document.querySelector('.t-copy-btn').innerText = T.copy;
+        document.querySelector('.t-nav-faucet').innerText = T.navF;
+        document.querySelector('.t-nav-wallet').innerText = T.navW;
+        document.querySelector('.t-nav-refs').innerText = T.navR;
+    };
+
+    onValue(configRef, (s) => { 
+        if(s.exists()) { 
+            sets = s.val(); 
+            document.getElementById('min-txt').innerText = sets.min;
+            document.getElementById('cfg-ad').value = sets.adCode || "";
+            document.getElementById('cfg-api').value = sets.api || "";
+            document.getElementById('cfg-reward').value = sets.reward || 0.001;
+            document.getElementById('cfg-wait').value = sets.wait || 20;
+            document.getElementById('cfg-min').value = sets.min || 0.1;
+            if(sets.adCode) document.getElementById('ad-top-slot').innerHTML = sets.adCode;
+        } 
+    });
+
+    onValue(userRef, async (s) => {
+        if(!s.exists()) await set(userRef, { balance: 0, last: 0, refCount: 0 });
+        else {
+            const d = s.val(); uBal = d.balance || 0;
+            document.getElementById('bal-display').innerText = uBal.toFixed(6);
+            document.getElementById('ref-count').innerText = d.refCount || 0;
+            document.getElementById('ref-link').value = `https://t.me/YOUR_BOT_NAME?start=${tgId}`;
+            runTimer(d.last || 0);
         }
-        function initParticles() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; particles = []; for(let i=0; i<40; i++) particles.push(new Particle()); }
-        function anim() { ctx.clearRect(0,0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(anim); }
-        initParticles(); anim();
+    });
 
-        function openFaq() { document.getElementById("faqModal").style.display = "block"; }
-        function closeFaq() { document.getElementById("faqModal").style.display = "none"; }
-
-        let currentLang = 'en';
-        const langData = {
-            en: { 
-                title: "BEE CLAIMER", subtitle: "FREE EARNING PLATFORM", active: "ACTIVE", tgTitle: "OFFICIAL HUB", tgDesc: "Updates & Payments", tgBtn: "JOIN", langBtn: "العربية",
-                faqH: "Help Center", faqQ1: "What is BeeClaimer?", faqA1: "It is an elite decentralized platform that allows users to claim daily rewards in multiple cryptocurrencies (TON, SOL, DOGE, BNB) safely and instantly.",
-                faqQ2: "Supported Coins", faqA2: "We currently support 4 major networks: TON, Solana, Dogecoin, and BNB. More coins will be added soon.",
-                faqQ3: "How to Withdrawal?", faqA3: "Once you reach the minimum threshold, click Withdraw. Enter your wallet address, and the payment is sent automatically.",
-                faqQ4: "Official Channel", faqA4: "Join @BeeClaimer on Telegram for updates, proof of payments, and support.",
-                faqClose: "Got it!"
-            },
-            ar: { 
-                title: "بي كليمر", subtitle: "منصة الربح المجاني", active: "نشط", tgTitle: "قناتنا الرسمية", tgDesc: "تحديثات ودفع فوري", tgBtn: "انضم", langBtn: "English",
-                faqH: "مركز المساعدة", faqQ1: "ما هو BeeClaimer؟", faqA1: "هي منصة متطورة تتيح للمستخدمين الحصول على مكافآت يومية من عدة عملات رقمية (TON, SOL, DOGE, BNB) بشكل آمن وفوري.",
-                faqQ2: "العملات المدعومة", faqA2: "ندعم حالياً 4 شبكات كبرى: TON، Solana، Dogecoin، و BNB. سيتم إضافة المزيد من العملات قريباً.",
-                faqQ3: "كيفية السحب؟", faqA3: "عند الوصول للحد الأدنى، اضغط على 'سحب' داخل صفحة العملة. أدخل عنوان محفظتك وسيتم إرسال الدفع تلقائياً.",
-                faqQ4: "القناة الرسمية", faqA4: "انضم إلى @BeeClaimer على تلجرام للحصول على التحديثات، إثباتات الدفع، والدعم المباشر.",
-                faqClose: "فهمت!"
+    function runTimer(last) {
+        clearInterval(tTick);
+        const waitMs = Number(sets.wait) * 60000;
+        const tick = () => {
+            const diff = waitMs - (Date.now() - last);
+            if(last > 0 && diff > 0) {
+                document.getElementById('claim-area').classList.add('hidden');
+                document.getElementById('wait-area').classList.remove('hidden');
+                const m = Math.floor(diff/60000); const s = Math.floor((diff%60000)/1000);
+                document.getElementById('timer-text').innerText = `${m}:${s<10?'0'+s:s}`;
+                document.getElementById('p-bar-fill').style.width = ((waitMs-diff)/waitMs*100) + "%";
+            } else {
+                document.getElementById('wait-area').classList.add('hidden');
+                document.getElementById('claim-area').classList.remove('hidden');
+                clearInterval(tTick);
             }
         };
+        tick(); tTick = setInterval(tick, 1000);
+    }
 
-        function toggleLang() {
-            currentLang = currentLang === 'en' ? 'ar' : 'en';
-            const d = langData[currentLang];
-            document.getElementById('main-html').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('lang-btn').innerText = d.langBtn;
-            document.getElementById('txt-title').innerText = d.title;
-            document.getElementById('txt-subtitle').innerText = d.subtitle;
-            document.getElementById('txt-tg-title').innerText = d.tgTitle;
-            document.getElementById('txt-tg-desc').innerText = d.tgDesc;
-            document.getElementById('txt-tg-btn').innerText = d.tgBtn;
-            // تحديث نصوص الـ FAQ
-            document.getElementById('faq-h').innerText = d.faqH;
-            document.getElementById('faq-q1-t').innerText = d.faqQ1;
-            document.getElementById('faq-a1-d').innerText = d.faqA1;
-            document.getElementById('faq-q2-t').innerText = d.faqQ2;
-            document.getElementById('faq-a2-d').innerText = d.faqA2;
-            document.getElementById('faq-q3-t').innerText = d.faqQ3;
-            document.getElementById('faq-a3-d').innerText = d.faqA3;
-            document.getElementById('faq-q4-t').innerText = d.faqQ4;
-            document.getElementById('faq-a4-d').innerText = d.faqA4;
-            document.getElementById('faq-close-btn').innerText = d.faqClose;
-            for(let i=1; i<=4; i++) document.getElementById('txt-active-'+i).innerText = d.active;
+    window.onCap = () => { document.getElementById('btn-claim').disabled = false; };
+
+    window.doClaim = async () => {
+        const btn = document.getElementById('btn-claim');
+        btn.disabled = true;
+
+        // التحقق الصارم من Firebase قبل إضافة الرصيد
+        const snapshot = await get(userRef);
+        const userData = snapshot.val();
+        const lastClaim = userData.last || 0;
+        const waitMs = Number(sets.wait) * 60000;
+        const now = Date.now();
+
+        if (lastClaim > 0 && (now - lastClaim) < waitMs) {
+            Swal.fire({
+                title: currentLang === 'en' ? 'Security Check' : 'تحقق الأمان',
+                text: currentLang === 'en' ? 'Time not finished yet!' : 'الوقت لم ينتهِ بعد!',
+                icon: 'warning'
+            });
+            runTimer(lastClaim);
+            return;
         }
-    </script>
+
+        try {
+            await update(userRef, { 
+                balance: uBal + parseFloat(sets.reward), 
+                last: now 
+            });
+            hcaptcha.reset();
+            Swal.fire({ title: currentLang === 'en'?'TON Claimed!':'تم المطالبة بنجاح', icon: 'success', timer: 1500, showConfirmButton: false });
+            runTimer(now);
+        } catch(e) {
+            btn.disabled = false;
+        }
+    };
+
+    window.doWithdraw = async () => {
+        const email = document.getElementById('w-email').value;
+        const amt = parseFloat(document.getElementById('w-amt').value);
+        if(!email || isNaN(amt) || amt < sets.min || amt > uBal) return Swal.fire('Error', 'Invalid details', 'error');
+        Swal.fire({ title: 'Processing...', didOpen: () => { Swal.showLoading(); } });
+        try {
+            const res = await fetch('https://faucetpay.io/api/v1/send', { method: 'POST', body: new URLSearchParams({ api_key: sets.api, currency: 'TON', amount: (amt*100000000).toFixed(0), to: email }) });
+            const r = await res.json();
+            if(r.status === 200) { await update(userRef, { balance: uBal - amt }); Swal.fire('Success!', 'TON sent to your FaucetPay', 'success'); }
+            else Swal.fire('Error', r.message, 'error');
+        } catch(e) { Swal.fire('Error', 'Connection failed', 'error'); }
+    };
+
+    window.nav = (p, el) => {
+        document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+        document.getElementById('p-'+p).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+    };
+
+    window.copyRef = () => {
+        const el = document.getElementById('ref-link'); el.select(); document.execCommand('copy');
+        Swal.fire({ title: currentLang==='en'?'Copied!':'تم النسخ', icon:'success', timer:1000, showConfirmButton: false });
+    };
+
+    window.saveSMC = async () => {
+        await update(configRef, { adCode: document.getElementById('cfg-ad').value, api: document.getElementById('cfg-api').value, reward: parseFloat(document.getElementById('cfg-reward').value), wait: parseInt(document.getElementById('cfg-wait').value), min: parseFloat(document.getElementById('cfg-min').value) });
+        Swal.fire('Saved!', '', 'success');
+    };
+
+    let g = 0;
+    document.getElementById('smc-trigger').onclick = () => { 
+        g++; if(g>=5) { 
+            Swal.fire({ title: 'Password', input: 'password' }).then((r) => { if (r.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block'; g=0; });
+        }
+    };
+</script>
 </body>
 </html>
-                                                                                                                  </html>
