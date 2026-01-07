@@ -148,7 +148,11 @@
     <div id="amcPanel" class="amc-modal"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;"><h2 style="color:var(--gold); margin:0;">SUPER AMC v3.0</h2><button onclick="closeAmc()" style="background:red; color:white; border:none; padding:8px 15px; border-radius:10px; font-weight:bold;">X</button></div><div class="amc-card"><div class="amc-stats-grid"><div class="amc-stat-box"><small style="color:#666;">Users</small><br><b id="amc_total_users">0</b></div><div class="amc-stat-box"><small style="color:#666;">Requests</small><br><b id="amc_total_req">0</b></div></div></div><div class="amc-card"><h3 style="font-size:14px; color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px;">🔑 Security & API</h3><label class="amc-label">FaucetPay API Key</label><input type="text" id="inp_api" class="amc-input" placeholder="Paste FaucetPay API Key"></div><div class="amc-card"><h3 style="font-size:14px; color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px;">💰 Rewards & Limits</h3><label class="amc-label">Mining Reward</label><input type="number" id="inp_mine" class="amc-input" step="0.00001"><label class="amc-label">Faucet Reward</label><input type="number" id="inp_faucet" class="amc-input" step="0.00001"><label class="amc-label">Daily Bonus</label><input type="number" id="inp_daily" class="amc-input" step="0.0001"><label class="amc-label">Min Withdraw</label><input type="number" id="inp_min" class="amc-input" step="0.0001"><label class="amc-label">Ref Commission %</label><input type="number" id="inp_ref" class="amc-input"></div><div class="amc-card"><h3 style="font-size:14px; color:#00ff88; border-bottom:1px solid #333; padding-bottom:10px;">📢 Ads Links</h3><label class="amc-label">Mining Ad URL</label><input type="text" id="ad_mine" class="amc-input"><label class="amc-label">Faucet Ad URL</label><input type="text" id="ad_faucet" class="amc-input"><label class="amc-label">Daily Ad URL</label><input type="text" id="ad_daily" class="amc-input"><label class="amc-label">Double Ad URL</label><input type="text" id="ad_double" class="amc-input"></div><button class="amc-btn" onclick="saveAmcSettings()">SAVE ALL CHANGES</button><div class="amc-card" style="margin-top:20px;"><h3 style="font-size:14px; color:var(--gold);">💸 Payout History</h3><div id="amc_req_list"></div></div></div>
 
 <script>
+    // تعديل أساسي لفك التجميد
     const tele = window.Telegram.WebApp;
+    tele.ready();  // إبلاغ تيليجرام أن التطبيق جاهز
+    tele.expand(); // فتح التطبيق بكامل الشاشة
+
     const teleUser = tele.initDataUnsafe?.user;
 
     function triggerAd(adType, callback) {
@@ -179,9 +183,10 @@
     let userId = teleUser ? teleUser.id.toString() : (localStorage.getItem('bee_uid') || ('user_' + Math.random().toString(36).substr(2, 9)));
     localStorage.setItem('bee_uid', userId);
     
-    // تم إصلاح الخطأ هنا: إضافة الشرطة السفلية ليتوافق مع beeclaimer_bot
+    // تم إصلاح الخطأ ليتوافق مع beeclaimer_bot
     const botUsername = "beeclaimer_bot"; 
-    document.getElementById('refURL').innerText = `https://t.me/${botUsername}?start=${userId}`;
+    const finalRefURL = `https://t.me/${botUsername}?start=${userId}`;
+    document.getElementById('refURL').innerText = finalRefURL;
 
     let balance = 0, friends = 0, refEarned = 0, currentReward = 0;
 
@@ -208,4 +213,147 @@
     function updateStaticUI() {
         document.getElementById('ui_mine_val').innerText = `(+${config.rewards.mine.toFixed(5)})`;
         document.getElementById('ui_faucet_val').innerText = `(+${config.rewards.faucet.toFixed(5)})`;
-        document.getElementById('ui_daily_va
+        document.getElementById('ui_daily_val').innerText = `(+${config.rewards.daily.toFixed(4)})`;
+        document.getElementById('ui_min_withdraw').innerText = config.limits.min_withdraw.toFixed(4);
+        document.getElementById('ui_ref_percent').innerText = config.limits.ref_percent;
+    }
+
+    function updateUI() {
+        document.getElementById('mainBal').innerText = balance.toFixed(5);
+        document.getElementById('friendCount').innerText = friends;
+        document.getElementById('refCommission').innerText = refEarned.toFixed(5);
+    }
+
+    function showPage(p) {
+        document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active-page'));
+        document.querySelectorAll('.nav-item').forEach(nv => nv.classList.remove('active'));
+        document.getElementById(p + 'Page').classList.add('active-page');
+        document.getElementById('nav' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('active');
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function setMaxWithdraw() { document.getElementById('withdrawAmtInp').value = balance.toFixed(5); }
+
+    function startAction(type) {
+        triggerAd('rewarded', () => {
+            if(config.ads[type] !== "#") tele.openLink(config.ads[type]); // استخدام متصفح تيليجرام
+            localStorage.setItem(type + '_end', Date.now() + (5 * 60 * 1000));
+            localStorage.setItem(type + '_active', 'true');
+        });
+    }
+
+    function claimDaily() {
+        const last = localStorage.getItem('last_daily');
+        if (!last || (Date.now() - last > 86400000)) {
+            triggerAd('pop', () => {
+                if(config.ads.daily !== "#") tele.openLink(config.ads.daily);
+                balance += config.rewards.daily;
+                localStorage.setItem('last_daily', Date.now());
+                saveUser();
+                showSuccess(config.rewards.daily, "Daily Bonus", "🎁");
+            });
+        }
+    }
+
+    function doubleReward() {
+        triggerAd('pop', () => {
+            if(config.ads.double !== "#") tele.openLink(config.ads.double);
+            balance += currentReward;
+            saveUser();
+            closeModal('successModal');
+            tele.showAlert("Reward Doubled!");
+        });
+    }
+
+    function speedUp(type) {
+        triggerAd('rewarded', () => {
+            let end = parseInt(localStorage.getItem(type + '_end'));
+            if(end && end > Date.now()) {
+                localStorage.setItem(type + '_end', end - (120 * 1000)); 
+            }
+        });
+    }
+
+    function showSuccess(amt, title, icon) {
+        currentReward = amt;
+        document.getElementById('amtText').innerText = "+" + amt.toFixed(5);
+        document.getElementById('successTitle').innerText = title;
+        document.getElementById('successIcon').innerText = icon;
+        openModal('successModal');
+    }
+
+    function saveUser() { db.ref('users/' + userId).update({ balance: balance }); }
+    
+    // تحسين وظيفة النسخ لتناسب تيليجرام
+    function copyRef() { 
+        const el = document.createElement('textarea');
+        el.value = finalRefURL;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        tele.showAlert('Link Copied Successfully!'); 
+    }
+
+    function processWithdraw() {
+        const email = document.getElementById('emailInp').value;
+        const inputAmt = parseFloat(document.getElementById('withdrawAmtInp').value);
+        const btn = document.getElementById('withdrawBtn');
+        if(isNaN(inputAmt) || inputAmt < config.limits.min_withdraw || inputAmt > balance || !email.includes("@")) return tele.showAlert("Check inputs.");
+
+        btn.disabled = true; btn.innerText = "PROCESSING...";
+        fetch('https://faucetpay.io/api/v1/send', {
+            method: 'POST',
+            body: new URLSearchParams({ 'api_key': config.api_key, 'currency': 'TON', 'amount': Math.floor(inputAmt * 100000000), 'to': email })
+        }).then(res => res.json()).then(data => {
+            if(data.status === 200) {
+                db.ref('withdrawals').push({ uid: userId, email: email, amount: inputAmt, status: 'PAID', time: Date.now() });
+                balance -= inputAmt; saveUser(); closeModal('wModal'); tele.showAlert("Success!");
+            } else { tele.showAlert("Error: " + data.message); btn.disabled = false; }
+        }).catch(() => { tele.showAlert("Saved for Review"); balance -= inputAmt; saveUser(); closeModal('wModal'); });
+    }
+
+    function openAmc() { document.getElementById('amcPanel').style.display = 'block'; }
+    function saveAmcSettings() { 
+        config.rewards.mine = parseFloat(document.getElementById('inp_mine').value);
+        config.rewards.faucet = parseFloat(document.getElementById('inp_faucet').value);
+        config.rewards.daily = parseFloat(document.getElementById('inp_daily').value);
+        config.limits.min_withdraw = parseFloat(document.getElementById('inp_min').value);
+        config.limits.ref_percent = parseInt(document.getElementById('inp_ref').value);
+        config.api_key = document.getElementById('inp_api').value;
+        db.ref('app_config').set(config).then(() => tele.showAlert("Saved!"));
+    }
+    function closeAmc() { document.getElementById('amcPanel').style.display = 'none'; }
+
+    function tick() {
+        const now = Date.now();
+        ['mine', 'faucet'].forEach(type => {
+            const end = localStorage.getItem(type + '_end'), active = localStorage.getItem(type + '_active'), btn = document.getElementById(type + 'Btn'), txt = document.getElementById(type + 'Timer'), card = document.getElementById(type + 'Card');
+            const speedTag = document.getElementById('speedMineTag');
+            
+            if (end && end > now) {
+                btn.disabled = true; card.classList.remove('ready-glow');
+                let diff = Math.ceil((end - now) / 1000); txt.innerText = `${Math.floor(diff/60)}m ${diff%60}s`;
+                if(type === 'mine') speedTag.style.display = 'block';
+            } else {
+                if (active === 'true') { 
+                    balance += config.rewards[type]; 
+                    localStorage.setItem(type + '_active', 'false'); 
+                    saveUser(); 
+                    showSuccess(config.rewards[type], type.toUpperCase(), type === 'mine' ? "⛏️" : "🍯"); 
+                }
+                btn.disabled = false; card.classList.add('ready-glow'); txt.innerText = "Ready";
+                if(type === 'mine') speedTag.style.display = 'none';
+            }
+        });
+        const lastD = localStorage.getItem('last_daily'), dBtn = document.getElementById('dailyBtn'), dCard = document.getElementById('dailyCard'), dTxt = document.getElementById('dailyTimer');
+        if (lastD && (now - lastD < 86400000)) { dBtn.disabled = true; dCard.classList.remove('ready-glow'); dTxt.innerText = "Claimed"; } 
+        else { dBtn.disabled = false; dCard.classList.add('ready-glow'); dTxt.innerText = "Ready"; }
+    }
+
+    setInterval(tick, 1000);
+    syncAll();
+</script>
+</body>
+</html>
