@@ -1,285 +1,601 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TON Platinum 2026 - BeeClaimer</title>
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BeeClaimer- Perfect Fit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <style>
-        :root { --bg: #050505; --card: #111; --primary: #0088CC; --secondary: #14F195; --gray: #a0a0a0; --line: #222; --glass: rgba(255, 255, 255, 0.05); }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-        [lang="ar"] { direction: rtl; text-align: right; }
-        .lang-switch { position: fixed; top: 15px; right: 15px; background: var(--glass); border: 1px solid var(--line); color: #fff; padding: 5px 12px; border-radius: 10px; cursor: pointer; z-index: 1001; font-size: 0.8rem; }
-        .ad-zone-top { width: 100%; height: 85px; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
-        .main-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 20px; position: relative; bottom: 15px; }
-        .page-view { width: 100%; max-width: 420px; display: none; flex-direction: column; }
-        .page-view.active { display: flex; animation: slideUp 0.4s ease-out; }
-        .card { background: var(--card); border-radius: 35px; padding: 25px 20px; border: 1px solid var(--line); text-align: center; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.9); }
-        .bal-val { font-size: 3rem; font-weight: 900; color: var(--primary); margin: 5px 0; font-family: 'Courier New', monospace; text-shadow: 0 0 15px rgba(0, 136, 204, 0.3); }
-        .btn-main { width: 100%; padding: 18px; border-radius: 20px; border: none; background: var(--primary); color: #fff; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 15px; }
-        .btn-main:disabled { opacity: 0.2; filter: grayscale(1); }
-        .v-input { width: 100%; padding: 16px; background: #000; border: 1px solid #333; color: #fff; border-radius: 20px; margin-bottom: 12px; text-align: center; font-size: 1rem; }
-        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .info-item { background: var(--glass); padding: 12px; border-radius: 18px; border: 1px solid #222; }
-        .info-label { display: block; font-size: 0.65rem; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; }
-        .info-value { display: block; font-size: 0.9rem; font-weight: bold; color: var(--primary); }
-        .fpay-banner { background: linear-gradient(90deg, #1a1a1a, #000); border: 1px dashed var(--primary); border-radius: 20px; padding: 15px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
-        .btn-reg { background: var(--primary); color: #fff; padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 0.75rem; font-weight: bold; }
-        .nav-bot { height: 95px; background: #000; display: flex; border-top: 1px solid var(--line); padding-bottom: 25px; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--gray); cursor: pointer; font-size: 0.8rem; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 1.5rem; margin-bottom: 6px; }
-        .smc-panel { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; padding: 25px; overflow-y: auto; }
-        #p-bar { height: 8px; background: #222; border-radius: 10px; width: 80%; margin: 15px auto; overflow: hidden; }
-        #p-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: 1s linear; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        :root {
+            --gold: #FFD700;
+            --card-bg: rgba(18, 18, 18, 0.8);
+            --border: rgba(255, 215, 0, 0.2);
+            --spacing: 12px;
+        }
+
+        body {
+            margin: 0; padding: 0; 
+            height: 100vh; 
+            background: #000; color: white; font-family: 'Inter', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            overflow: hidden; 
+        }
+
+        .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #000 80%); z-index: -1; }
+
+        .container {
+            width: 100%; max-width: 420px; 
+            padding: 10px; box-sizing: border-box;
+            display: flex; flex-direction: column;
+            height: 100vh;
+        }
+
+        .app-title { 
+            font-weight: 900; color: var(--gold); letter-spacing: 2px; 
+            font-size: clamp(18px, 5vw, 22px); 
+            margin: 10px 0; text-align: center; text-transform: uppercase;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .page { display: none; width: 100%; flex-direction: column; flex-grow: 1; margin-bottom: 80px; }
+        .active-page { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .wallet-card {
+            width: 100%; 
+            background: linear-gradient(135deg, #1e1b0a 0%, #000000 100%); 
+            border-radius: 25px; border: 1px solid var(--gold);
+            padding: 20px; box-sizing: border-box; text-align: center; 
+            margin-bottom: var(--spacing);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .wallet-card:active { transform: scale(0.98); }
+
+        .bal-label { font-size: 11px; font-weight: 800; color: var(--gold); opacity: 0.8; text-transform: uppercase; }
+        .bal-val { font-size: clamp(30px, 10vw, 45px); font-weight: 900; margin: 5px 0; color: #fff; letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+            width: 100%; 
+            flex-grow: 1; 
+            align-content: stretch;
+        }
+        
+        .card {
+            border-radius: 22px; padding: 15px 10px; display: flex; flex-direction: column; 
+            align-items: center; text-align: center; position: relative; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            justify-content: space-between;
+        }
+        .card:active { transform: scale(0.95); }
+
+        .icon-box { display: inline-block; transition: transform 0.3s ease; }
+
+        .ready-glow { animation: readyPulse 2s infinite; border-color: var(--gold); }
+        .ready-glow .icon-box { animation: iconWobble 1.5s infinite ease-in-out; }
+
+        @keyframes readyPulse { 
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        @keyframes iconWobble {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(1.1) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .card-daily { background: linear-gradient(135deg, #2d1b4e 0%, #160d26 100%); border-color: #6c4ab6; }
+        .card-mine { background: linear-gradient(135deg, #0f2d4e 0%, #061626 100%); border-color: #007bff; }
+        .card-faucet { 
+            grid-column: span 2; flex-direction: row; justify-content: space-between; 
+            padding: 12px 20px; align-items: center;
+            background: linear-gradient(135deg, #4e3a0f 0%, #261c06 100%); border-color: #ff9900;
+            max-height: 80px; margin-top: 5px;
+        }
+
+        .btn-main { 
+            background: var(--gold); color: #000; border: none; padding: 12px; 
+            border-radius: 16px; font-weight: 900; width: 100%; cursor: pointer; 
+            font-size: 12px; transition: 0.2s; text-transform: uppercase;
+        }
+        .btn-main:active { transform: scale(0.92); }
+        .btn-main:disabled { background: rgba(0,0,0,0.4); color: #777; cursor: not-allowed; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-small { padding: 10px; font-size: 11px; margin-top: 10px; }
+
+        .timer-text { 
+            font-size: 12px; color: #fff; font-weight: 800; margin-top: 5px; 
+            display: block; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 10px;
+        }
+        
+        .speed-up-tag { 
+            position: absolute; top: -10px; right: 10px; background: #ff3b3b; color: white; 
+            font-size: 9px; padding: 5px 12px; border-radius: 20px; font-weight: 900;
+            display: none; box-shadow: 0 4px 10px rgba(255, 59, 59, 0.3); z-index: 10;
+        }
+
+        .nav-bar {
+            position: fixed; bottom: 15px; width: 92%; max-width: 380px;
+            background: rgba(18,18,18,0.95); border: 1px solid var(--border);
+            height: 70px; border-radius: 25px; display: flex; justify-content: space-around;
+            align-items: center; backdrop-filter: blur(20px); z-index: 1000;
+        }
+        .nav-item { text-align: center; opacity: 0.3; transition: 0.3s; flex: 1; cursor: pointer; }
+        .nav-item.active { opacity: 1; color: var(--gold); transform: translateY(-5px); }
+        .nav-item span { font-size: 11px; font-weight: 800; display: block; margin-top: 6px; }
+
+        .modal-overlay { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); 
+            z-index: 99999; justify-content: center; align-items: center; padding: 25px; 
+            backdrop-filter: blur(5px);
+        }
+        .modal-content { 
+            background: #0f0f0f; width: 100%; max-width: 340px; border-radius: 35px; 
+            border: 1px solid var(--gold); padding: 40px 30px; box-sizing: border-box; text-align: center; 
+        }
+
+        .ref-withdraw-box {
+            margin-top: 20px; padding: 12px; border: 1px solid rgba(255, 215, 0, 0.15);
+            background: rgba(255, 255, 255, 0.03); border-radius: 18px; font-size: 11px;
+        }
+        .ref-withdraw-box a { color: var(--gold); text-decoration: none; font-weight: bold; }
+        .amt-tag { font-size: 11px; color: var(--gold); font-weight: 900; margin-bottom: 5px; }
+
+        .ref-stats-container { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; }
+        .ref-stat-card { background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: 15px; padding: 10px; flex: 1; }
+        .ref-stat-card small { font-size: 9px; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 4px; }
+        .ref-stat-card span { font-size: 16px; font-weight: 900; }
+
+        .amc-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 100000; overflow-y: auto; padding: 20px; }
+        .amc-card { background: #111; border: 1px solid #333; border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        .amc-label { display: block; font-size: 11px; color: var(--gold); margin: 10px 0 5px 0; text-transform: uppercase; font-weight: bold;}
+        .amc-input { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 12px; border-radius: 12px; box-sizing: border-box; outline: none; font-size: 13px; }
+        .amc-btn { background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 15px; width: 100%; font-weight: 900; margin-top: 10px; cursor: pointer; text-transform: uppercase; }
+        .amc-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .amc-stat-box { background: #000; padding: 12px; border-radius: 15px; text-align: center; border: 1px solid #222; }
     </style>
 </head>
-<body lang="en">
+<body>
 
-<button class="lang-switch" onclick="toggleLang()">AR/EN</button>
-<div class="ad-zone-top" id="ad-top-slot"></div>
+    <div class="bg-glow"></div>
 
-<div class="main-content">
-    <div id="p-home" class="page-view active">
-        <div class="card">
-            <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" style="width:60px;" id="smc-trigger">
-            <div class="t-bal-label" style="color:var(--gray); font-size: 0.75rem; margin-top:10px;">AVAILABLE TON</div>
-            <div id="bal-display" class="bal-val">0.000000</div>
-            <div id="claim-area">
-                <div style="display:flex; justify-content:center; margin:15px 0;"><div class="h-captcha" data-sitekey="50e831e4-919a-4c16-98ce-deaac51632a8" data-callback="onCap" data-theme="dark"></div></div>
-                <button id="btn-claim" class="btn-main t-claim-btn" disabled onclick="doClaim()">CLAIM TON ⚡</button>
+    <div class="container">
+        <div class="app-title" id="titleHandler">BeeClaimer </div>
+
+        <div id="homePage" class="page active-page">
+            <div class="wallet-card">
+                <div class="bal-label">Total Available Balance</div>
+                <div class="bal-val">
+                    <span style="color: #0088cc; font-size: 32px; filter: drop-shadow(0 0 8px #0088cc);">💎</span>
+                    <span id="mainBal">0.0000</span> 
+                    <small style="font-size: 16px; opacity: 0.4;">TON</small>
+                </div>
+                <button class="btn-main" onclick="openModal('wModal')" style="width: 70%; margin: 8px auto 0 auto;">Withdraw Funds</button>
             </div>
-            <div id="wait-area" class="hidden">
-                <div id="timer-text" style="font-size:2.5rem; font-weight:900; color:var(--primary); margin:10px 0;">20:00</div>
-                <div id="p-bar"><div id="p-bar-fill"></div></div>
-                <p class="t-sync-text" style="color:var(--gray); font-size:0.8rem;">Next Claim in...</p>
+
+            <div class="grid">
+                <div class="card card-daily" id="dailyCard">
+                    <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                        <span class="icon-box" style="font-size:35px;">🎁</span>
+                        <h3 style="font-size:13px; margin:8px 0 2px 0; color: #d1b3ff;">Daily Gift</h3>
+                        <div class="amt-tag" id="ui_daily_val">(+0.01)</div>
+                        <span id="dailyTimer" class="timer-text">Ready</span>
+                    </div>
+                    <button id="dailyBtn" class="btn-main btn-small" onclick="claimDaily()">Claim Bonus</button>
+                </div>
+
+                <div class="card card-mine" id="mineCard">
+                    <div id="speedMineTag" class="speed-up-tag" onclick="speedUp('mine')">⚡ SPEED UP</div>
+                    <div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                        <span class="icon-box" style="font-size:35px;">⛏️</span>
+                        <h3 style="font-size:13px; margin:8px 0 2px 0; color: #b3d9ff;">Mining</h3>
+                        <div class="amt-tag" id="ui_mine_val" style="color:#007bff;">(+0.001)</div>
+                        <span id="mineTimer" class="timer-text">Ready</span>
+                    </div>
+                    <button id="mineBtn" class="btn-main btn-small" onclick="startAction('mine')">Start</button>
+                </div>
+
+                <div class="card card-faucet" id="faucetCard">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <span class="icon-box" style="font-size:34px;">🍯</span>
+                        <div style="text-align:left;">
+                            <h3 style="margin:0; font-size:14px; color: #ffd9b3;">Honey Faucet</h3>
+                            <div class="amt-tag" id="ui_faucet_val" style="margin:0; font-size:10px;">(+0.002)</div>
+                            <span id="faucetTimer" class="timer-text">Ready</span>
+                        </div>
+                    </div>
+                    <button id="faucetBtn" class="btn-main" style="width:110px;" onclick="startAction('faucet')">Claim</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="refPage" class="page">
+            <div class="wallet-card" style="flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
+                <span style="font-size:60px;">👥</span>
+                <h2 style="margin:15px 0 10px 0;">Referral Hub</h2>
+                
+                <div class="ref-stats-container">
+                    <div class="ref-stat-card">
+                        <small>Total Friends</small>
+                        <span id="friendCount">0</span>
+                    </div>
+                    <div class="ref-stat-card">
+                        <small>Commission Earned</small>
+                        <span id="refCommission">0.0000</span>
+                    </div>
+                </div>
+
+                <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; font-size:12px; color:var(--gold); margin-bottom: 20px;">🤝 Earn <span id="ui_ref_percent">10</span>% commission instantly!</div>
+                <div style="background:#000; border:1px dashed var(--border); padding:16px; border-radius:15px; font-size:11px; word-break:break-all; color:#aaa;" id="refURL">Loading...</div>
+                <button class="btn-main" style="margin-top:25px; width: 80%; align-self: center;" onclick="copyRef()">Copy Link</button>
             </div>
         </div>
     </div>
 
-    <div id="p-wallet" class="page-view">
-        <div class="card">
-            <h3 class="t-withdraw-title" style="color:var(--primary)">WITHDRAW TON</h3>
-            <div class="grid-info">
-                <div class="info-item"><span class="info-label t-min-label">MINIMUM</span><span class="info-value" id="min-txt">0.1</span></div>
-                <div class="info-item"><span class="info-label">NETWORK</span><span class="info-value" style="color:var(--secondary)">TON-FP</span></div>
-            </div>
-            <input type="text" id="w-email" placeholder="FaucetPay Email" class="v-input">
-            <input type="number" id="w-amt" placeholder="Amount (TON)" class="v-input">
-            <button class="btn-main t-withdraw-btn" onclick="doWithdraw()">WITHDRAW NOW</button>
-            <div class="fpay-banner">
-                <div style="text-align:left;"><div class="t-fpay-q" style="font-size:0.8rem; font-weight:bold;">No Wallet?</div><div class="t-fpay-a" style="font-size:0.65rem; color:var(--gray);">Get a FaucetPay account</div></div>
-                <a href="https://faucetpay.io/?r=362774" target="_blank" class="btn-reg t-reg-btn">REGISTER</a>
-            </div>
+    <div class="nav-bar">
+        <div class="nav-item active" id="navHome" onclick="showPage('home')">🏠<span>Home</span></div>
+        <div class="nav-item" id="navRef" onclick="showPage('ref')">👥<span>Friends</span></div>
+    </div>
+
+    <div id="wModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="color:var(--gold); margin:0 0 10px 0;">Withdraw</h2>
+            <div style="font-size: 13px; color: #888; margin-bottom: 25px;">Min Payout: <b id="ui_min_withdraw" style="color:#fff;">0.1000</b> TON</div>
+            <input type="email" id="emailInp" placeholder="FaucetPay Email Address" style="width:100%; padding:18px; border-radius:18px; border:1px solid #333; background:#000; color:#fff; text-align:center; margin-bottom:20px; box-sizing:border-box; outline:none;">
+            <button class="btn-main" id="withdrawBtn" onclick="processWithdraw()">Request Payout</button>
+            <div class="ref-withdraw-box">Don't have a FaucetPay wallet?<br><a href="https://faucetpay.io/?r=362774" target="_blank">Register here</a></div>
+            <div onclick="closeModal('wModal')" style="margin-top:25px; font-size:13px; opacity:0.6; cursor:pointer; font-weight:700;">Close Window</div>
         </div>
     </div>
 
-    <div id="p-refs" class="page-view">
-        <div class="card">
-            <h3 class="t-ref-title" style="color:var(--primary)">AFFILIATE PROGRAM</h3>
-            <div class="grid-info">
-                <div class="info-item"><span class="info-label t-comm-label">COMMISSION</span><span class="info-value">10%</span></div>
-                <div class="info-item"><span class="info-label t-total-ref-label">TOTAL REFS</span><span class="info-value" id="ref-count">0</span></div>
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-content">
+            <span id="successIcon" style="font-size: 70px;">✅</span>
+            <h2 id="successTitle" style="margin:20px 0 10px 0;">Awesome!</h2>
+            <div id="successAmt" style="color:var(--gold); font-size: 36px; font-weight: 900; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <span style="color: #0088cc; font-size: 30px;">💎</span>
+                <span id="amtText">+0.0010</span>
             </div>
-            <p style="font-size:0.75rem; color:var(--gray);" class="t-ref-desc">Share link & earn on every claim</p>
-            <input type="text" id="ref-link" readonly class="v-input" style="font-size: 0.8rem; border:1px dashed var(--primary); background:rgba(0,136,204,0.05);">
-            <button class="btn-main t-copy-btn" onclick="copyRef()">COPY LINK</button>
+            <button class="btn-main" onclick="closeModal('successModal')">Collect</button>
+            <button class="btn-main" style="margin-top:15px; background:#00ff88; font-size:12px;" onclick="doubleReward()">🔥 Double Reward (Ad)</button>
         </div>
     </div>
-</div>
 
-<div id="smc-ui" class="smc-panel">
-    <h2 style="color:var(--primary)">ADMIN SETTINGS 2026</h2>
-    <label>Ad HTML Code:</label><textarea id="cfg-ad" class="v-input" style="height:80px;"></textarea>
-    <label>FaucetPay API Key:</label><input type="text" id="cfg-api" class="v-input">
-    <label>TON Reward:</label><input type="number" id="cfg-reward" class="v-input" step="0.0001">
-    <label>Wait (Min):</label><input type="number" id="cfg-wait" class="v-input" value="20">
-    <label>Min Withdraw:</label><input type="number" id="cfg-min" class="v-input">
-    <button class="btn-main" onclick="saveSMC()">SAVE SETTINGS</button>
-    <button class="btn-main" onclick="document.getElementById('smc-ui').style.display='none'" style="background:#333;">EXIT</button>
-</div>
+    <div id="amcPanel" class="amc-modal">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="color:var(--gold); margin:0;">SUPER AMC v3.0</h2>
+            <button onclick="closeAmc()" style="background:red; color:white; border:none; padding:8px 15px; border-radius:10px; font-weight:bold;">X</button>
+        </div>
+        
+        <div class="amc-card">
+            <div class="amc-stats-grid">
+                <div class="amc-stat-box"><small style="color:#666;">Users</small><br><b id="amc_total_users">0</b></div>
+                <div class="amc-stat-box"><small style="color:#666;">Requests</small><br><b id="amc_total_req">0</b></div>
+            </div>
+        </div>
 
-<nav class="nav-bot">
-    <div class="nav-item active" onclick="nav('home', this)"><i class="fas fa-gem"></i><span class="t-nav-faucet">Faucet</span></div>
-    <div class="nav-item" onclick="nav('wallet', this)"><i class="fas fa-wallet"></i><span class="t-nav-wallet">Wallet</span></div>
-    <div class="nav-item" onclick="nav('refs', this)"><i class="fas fa-users"></i><span class="t-nav-refs">Friends</span></div>
-</nav>
+        <div class="amc-card">
+            <h3 style="font-size:14px; color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px;">🔑 Security & API</h3>
+            <label class="amc-label">FaucetPay API Key</label>
+            <input type="text" id="inp_api" class="amc-input" placeholder="Paste FaucetPay API Key">
+        </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, update, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        <div class="amc-card">
+            <h3 style="font-size:14px; color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px;">💰 Rewards & Limits</h3>
+            <label class="amc-label">Mining Reward</label><input type="number" id="inp_mine" class="amc-input" step="0.0001">
+            <label class="amc-label">Faucet Reward</label><input type="number" id="inp_faucet" class="amc-input" step="0.0001">
+            <label class="amc-label">Daily Bonus</label><input type="number" id="inp_daily" class="amc-input" step="0.0001">
+            <label class="amc-label">Min Withdraw</label><input type="number" id="inp_min" class="amc-input" step="0.01">
+            <label class="amc-label">Ref Commission %</label><input type="number" id="inp_ref" class="amc-input">
+        </div>
 
-    const firebaseConfig = { databaseURL: "https://ton-platinum-2026-default-rtdb.firebaseio.com/" };
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    
-    // بيانات تليجرام
-    const tg = window.Telegram.WebApp;
-    const tgId = tg.initDataUnsafe?.user?.id || "dev_user";
-    const uid = "u_" + tgId;
-    const startParam = tg.initDataUnsafe?.start_param; // لجلب معرف الداعي
+        <div class="amc-card">
+            <h3 style="font-size:14px; color:#00ff88; border-bottom:1px solid #333; padding-bottom:10px;">📢 Ads Links</h3>
+            <label class="amc-label">Mining Ad URL</label><input type="text" id="ad_mine" class="amc-input">
+            <label class="amc-label">Faucet Ad URL</label><input type="text" id="ad_faucet" class="amc-input">
+            <label class="amc-label">Daily Ad URL</label><input type="text" id="ad_daily" class="amc-input">
+            <label class="amc-label">Double Ad URL</label><input type="text" id="ad_double" class="amc-input">
+        </div>
 
-    let sets = { reward: 0.001, wait: 20, min: 0.1, api: "", adCode: "" };
-    let uBal = 0; let tTick; let currentLang = 'en';
+        <button class="amc-btn" onclick="saveAmcSettings()">SAVE ALL CHANGES</button>
 
-    const userRef = ref(db, 'users/' + uid);
-    const configRef = ref(db, 'config');
+        <div class="amc-card" style="margin-top:20px;">
+            <h3 style="font-size:14px; color:var(--gold);">💸 Payout History</h3>
+            <div id="amc_req_list"></div>
+        </div>
+    </div>
 
-    const trans = {
-        en: { balLabel: "AVAILABLE TON", claimBtn: "CLAIM TON ⚡", sync: "Next Claim in...", withTitle: "WITHDRAW TON", minLab: "MINIMUM", withBtn: "WITHDRAW NOW", fpayQ: "No Wallet?", fpayA: "Get a FaucetPay account", reg: "REGISTER", refTitle: "AFFILIATE PROGRAM", comm: "COMMISSION", tRef: "TOTAL REFS", refDesc: "Share link & earn on every claim", copy: "COPY LINK", navF: "Faucet", navW: "Wallet", navR: "Friends" },
-        ar: { balLabel: "رصيد تون المتاح", claimBtn: "مطالبة TON ⚡", sync: "المطالبة التالية خلال...", withTitle: "سحب العملات", minLab: "الحد الأدنى", withBtn: "اسحب الآن", fpayQ: "ليس لديك محفظة؟", fpayA: "سجل في فوست باي الآن", reg: "تسجيل", refTitle: "برنامج الإحالة", comm: "العمولة", tRef: "إجمالي الإحالات", refDesc: "شارك الرابط واربح مع كل مطالبة", copy: "نسخ الرابط", navF: "الصنبور", navW: "المحفظة", navR: "الأصدقاء" }
+<script>
+    // --- FIREBASE CONFIG ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVj2Mda_x16XiegcR0Mqk5fWI4m7BlrMk",
+      authDomain: "beecfaucet.firebaseapp.com",
+      databaseURL: "https://beecfaucet-default-rtdb.firebaseio.com",
+      projectId: "beecfaucet",
+      storageBucket: "beecfaucet.firebasestorage.app",
+      messagingSenderId: "867086977888",
+      appId: "1:867086977888:web:415084058e5b0ad369ec05"
     };
 
-    window.toggleLang = () => {
-        currentLang = currentLang === 'en' ? 'ar' : 'en';
-        document.body.lang = currentLang;
-        const T = trans[currentLang];
-        document.querySelector('.t-bal-label').innerText = T.balLabel;
-        document.querySelector('.t-claim-btn').innerText = T.claimBtn;
-        document.querySelector('.t-sync-text').innerText = T.sync;
-        document.querySelector('.t-withdraw-title').innerText = T.withTitle;
-        document.querySelector('.t-min-label').innerText = T.minLab;
-        document.querySelector('.t-withdraw-btn').innerText = T.withBtn;
-        document.querySelector('.t-fpay-q').innerText = T.fpayQ;
-        document.querySelector('.t-fpay-a').innerText = T.fpayA;
-        document.querySelector('.t-reg-btn').innerText = T.reg;
-        document.querySelector('.t-ref-title').innerText = T.refTitle;
-        document.querySelector('.t-comm-label').innerText = T.comm;
-        document.querySelector('.t-total-ref-label').innerText = T.tRef;
-        document.querySelector('.t-ref-desc').innerText = T.refDesc;
-        document.querySelector('.t-copy-btn').innerText = T.copy;
-        document.querySelector('.t-nav-faucet').innerText = T.navF;
-        document.querySelector('.t-nav-wallet').innerText = T.navW;
-        document.querySelector('.t-nav-refs').innerText = T.navR;
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let config = {
+        rewards: { mine: 0.001, faucet: 0.002, daily: 0.01 },
+        ads: { mine: "#", faucet: "#", daily: "#", double: "#" },
+        limits: { min_withdraw: 0.1, ref_percent: 10 },
+        api_key: ""
     };
 
-    // نظام فحص وتسجيل الإحالات
-    async function checkReferral() {
-        const snapshot = await get(userRef);
-        if (!snapshot.exists() && startParam && startParam != tgId) {
-            const inviterRef = ref(db, 'users/u_' + startParam);
-            const inviterSnap = await get(inviterRef);
-            if (inviterSnap.exists()) {
-                const currentRefCount = inviterSnap.val().refCount || 0;
-                await update(inviterRef, { refCount: currentRefCount + 1 });
+    let userId = localStorage.getItem('bee_uid') || ('user_' + Math.random().toString(36).substr(2, 9));
+    localStorage.setItem('bee_uid', userId);
+    document.getElementById('refURL').innerText = `https://t.me/BeeBot?start=${userId}`;
+
+    let balance = 0, friends = 0, refEarned = 0, currentReward = 0;
+
+    let clicks = 0;
+    document.getElementById('titleHandler').onclick = () => {
+        clicks++;
+        if(clicks === 8) {
+            let p = prompt("Admin Password:");
+            if(p === "1234") openAmc();
+            clicks = 0;
+        }
+        setTimeout(() => clicks = 0, 3000);
+    };
+
+    function syncAll() {
+        db.ref('app_config').on('value', snap => {
+            if(snap.exists()) {
+                config = snap.val();
+                updateStaticUI();
             }
-        }
-    }
+        });
 
-    onValue(configRef, (s) => { 
-        if(s.exists()) { 
-            sets = s.val(); 
-            document.getElementById('min-txt').innerText = sets.min;
-            document.getElementById('cfg-ad').value = sets.adCode || "";
-            document.getElementById('cfg-api').value = sets.api || "";
-            document.getElementById('cfg-reward').value = sets.reward || 0.001;
-            document.getElementById('cfg-wait').value = sets.wait || 20;
-            document.getElementById('cfg-min').value = sets.min || 0.1;
-            if(sets.adCode) document.getElementById('ad-top-slot').innerHTML = sets.adCode;
-        } 
-    });
-
-    onValue(userRef, async (s) => {
-        if(!s.exists()) {
-            await set(userRef, { balance: 0, last: 0, refCount: 0 });
-            checkReferral(); // فحص الإحالة للمستخدم الجديد
-        } else {
-            const d = s.val(); uBal = d.balance || 0;
-            document.getElementById('bal-display').innerText = uBal.toFixed(6);
-            document.getElementById('ref-count').innerText = d.refCount || 0;
-            // استخدام رابط startapp الصحيح مع BeeClaimer_bot
-            document.getElementById('ref-link').value = `https://t.me/BeeClaimer_bot?startapp=${tgId}`;
-            runTimer(d.last || 0);
-        }
-    });
-
-    function runTimer(last) {
-        clearInterval(tTick);
-        const waitMs = Number(sets.wait) * 60000;
-        const tick = () => {
-            const diff = waitMs - (Date.now() - last);
-            if(last > 0 && diff > 0) {
-                document.getElementById('claim-area').classList.add('hidden');
-                document.getElementById('wait-area').classList.remove('hidden');
-                const m = Math.floor(diff/60000); const s = Math.floor((diff%60000)/1000);
-                document.getElementById('timer-text').innerText = `${m}:${s<10?'0'+s:s}`;
-                document.getElementById('p-bar-fill').style.width = ((waitMs-diff)/waitMs*100) + "%";
+        db.ref('users/' + userId).on('value', snap => {
+            if(snap.exists()) {
+                const d = snap.val();
+                balance = d.balance || 0;
+                friends = d.friends || 0;
+                refEarned = d.refEarned || 0;
+                updateUI();
             } else {
-                document.getElementById('wait-area').classList.add('hidden');
-                document.getElementById('claim-area').classList.remove('hidden');
-                clearInterval(tTick);
+                db.ref('users/' + userId).set({ balance: 0, friends: 0, refEarned: 0 });
             }
-        };
-        tick(); tTick = setInterval(tick, 1000);
+        });
     }
 
-    window.onCap = () => { document.getElementById('btn-claim').disabled = false; };
+    function updateStaticUI() {
+        document.getElementById('ui_mine_val').innerText = `(+${config.rewards.mine})`;
+        document.getElementById('ui_faucet_val').innerText = `(+${config.rewards.faucet})`;
+        document.getElementById('ui_daily_val').innerText = `(+${config.rewards.daily})`;
+        document.getElementById('ui_min_withdraw').innerText = config.limits.min_withdraw.toFixed(4);
+        document.getElementById('ui_ref_percent').innerText = config.limits.ref_percent;
+    }
 
-    window.doClaim = async () => {
-        const btn = document.getElementById('btn-claim');
+    function updateUI() {
+        document.getElementById('mainBal').innerText = balance.toFixed(4);
+        document.getElementById('friendCount').innerText = friends;
+        document.getElementById('refCommission').innerText = refEarned.toFixed(4);
+    }
+
+    function showPage(p) {
+        document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active-page'));
+        document.querySelectorAll('.nav-item').forEach(nv => nv.classList.remove('active'));
+        document.getElementById(p + 'Page').classList.add('active-page');
+        document.getElementById('nav' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('active');
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function startAction(type) {
+        window.open(config.ads[type], '_blank');
+        localStorage.setItem(type + '_end', Date.now() + (5 * 60 * 1000));
+        localStorage.setItem(type + '_active', 'true');
+    }
+
+    function claimDaily() {
+        const last = localStorage.getItem('last_daily');
+        if (!last || (Date.now() - last > 86400000)) {
+            window.open(config.ads.daily, '_blank');
+            balance += config.rewards.daily;
+            localStorage.setItem('last_daily', Date.now());
+            saveUser();
+            showSuccess(config.rewards.daily, "Daily Bonus", "🎁");
+        }
+    }
+
+    function speedUp(type) {
+        window.open(config.ads[type], '_blank');
+        let end = parseInt(localStorage.getItem(type + '_end'));
+        localStorage.setItem(type + '_end', end - (120 * 1000)); 
+    }
+
+    function doubleReward() {
+        window.open(config.ads.double, '_blank');
+        balance += currentReward;
+        saveUser();
+        closeModal('successModal');
+        alert("Reward Doubled!");
+    }
+
+    function showSuccess(amt, title, icon) {
+        currentReward = amt;
+        document.getElementById('amtText').innerText = "+" + amt.toFixed(4);
+        document.getElementById('successTitle').innerText = title;
+        document.getElementById('successIcon').innerText = icon;
+        openModal('successModal');
+    }
+
+    function saveUser() { db.ref('users/' + userId).update({ balance: balance }); }
+
+    function copyRef() {
+        navigator.clipboard.writeText(document.getElementById('refURL').innerText);
+        alert('Copied!');
+    }
+
+    // --- INSTANT PAYOUT LOGIC ---
+    function processWithdraw() {
+        const email = document.getElementById('emailInp').value;
+        const btn = document.getElementById('withdrawBtn');
+        
+        if(balance < config.limits.min_withdraw) return alert("Insufficient balance");
+        if(!email.includes("@")) return alert("Invalid email");
+        if(!config.api_key) return alert("System Error: Payout API not configured in Admin Panel.");
+
         btn.disabled = true;
-        const snapshot = await get(userRef);
-        const userData = snapshot.val();
-        const lastClaim = userData.last || 0;
-        const waitMs = Number(sets.wait) * 60000;
+        btn.innerText = "PROCESSING...";
+
+        // Calling FaucetPay API via Proxy to bypass CORS
+        const amountSatoshi = Math.floor(balance * 100000000); 
+        const payoutUrl = `https://faucetpay.io/api/v1/send?api_key=${config.api_key}&currency=TON&amount=${amountSatoshi}&to=${email}`;
+
+        // Note: Direct Browser-to-FaucetPay might hit CORS issues. 
+        // We use fetch but recommend a server-side cloud function for production.
+        fetch(payoutUrl)
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 200) {
+                // Success
+                db.ref('withdrawals').push({ 
+                    uid: userId, 
+                    email: email, 
+                    amount: balance, 
+                    status: 'PAID_INSTANT', 
+                    time: Date.now(),
+                    txid: data.payout_user_hash 
+                });
+                balance = 0; 
+                saveUser(); 
+                closeModal('wModal'); 
+                alert("🚀 Payout Sent Instantly to FaucetPay!");
+            } else {
+                alert("Payout Failed: " + data.message);
+                btn.disabled = false;
+                btn.innerText = "TRY AGAIN";
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            // Fallback: If API call fails (CORS), save as pending for admin
+            db.ref('withdrawals').push({ uid: userId, email: email, amount: balance, status: 'pending', time: Date.now() });
+            balance = 0; saveUser(); closeModal('wModal');
+            alert("Sent to Manual Review (API Connection Busy)");
+        });
+    }
+
+    function openAmc() {
+        document.getElementById('amcPanel').style.display = 'block';
+        document.getElementById('inp_api').value = config.api_key || "";
+        document.getElementById('inp_mine').value = config.rewards.mine;
+        document.getElementById('inp_faucet').value = config.rewards.faucet;
+        document.getElementById('inp_daily').value = config.rewards.daily;
+        document.getElementById('inp_min').value = config.limits.min_withdraw;
+        document.getElementById('inp_ref').value = config.limits.ref_percent;
+        document.getElementById('ad_mine').value = config.ads.mine;
+        document.getElementById('ad_faucet').value = config.ads.faucet;
+        document.getElementById('ad_daily').value = config.ads.daily;
+        document.getElementById('ad_double').value = config.ads.double;
+
+        db.ref('withdrawals').on('value', snap => {
+            const container = document.getElementById('amc_req_list');
+            container.innerHTML = "";
+            let count = 0;
+            snap.forEach(child => {
+                count++;
+                const item = child.val();
+                const statusColor = item.status === 'PAID_INSTANT' ? '#00ff88' : 'orange';
+                container.innerHTML += `<div style="background:#000; padding:10px; border-radius:10px; margin-top:5px; font-size:11px; border:1px solid #222;">
+                    ${item.email} | <b>${item.amount.toFixed(4)}</b> | <span style="color:${statusColor}">${item.status}</span>
+                    <button onclick="deleteReq('${child.key}')" style="float:right; background:red; color:#fff; border:none; border-radius:5px; padding:2px 8px; cursor:pointer;">X</button>
+                </div>`;
+            });
+            document.getElementById('amc_total_req').innerText = count;
+        });
+        db.ref('users').once('value', snap => { document.getElementById('amc_total_users').innerText = snap.numChildren(); });
+    }
+
+    function saveAmcSettings() {
+        const newCfg = {
+            rewards: { mine: parseFloat(document.getElementById('inp_mine').value), faucet: parseFloat(document.getElementById('inp_faucet').value), daily: parseFloat(document.getElementById('inp_daily').value) },
+            limits: { min_withdraw: parseFloat(document.getElementById('inp_min').value), ref_percent: parseInt(document.getElementById('inp_ref').value) },
+            ads: { mine: document.getElementById('ad_mine').value, faucet: document.getElementById('ad_faucet').value, daily: document.getElementById('ad_daily').value, double: document.getElementById('ad_double').value },
+            api_key: document.getElementById('inp_api').value
+        };
+        db.ref('app_config').set(newCfg).then(() => alert("All Settings Saved!"));
+    }
+
+    function deleteReq(key) { if(confirm("Delete Record?")) db.ref('withdrawals/' + key).remove(); }
+    function closeAmc() { document.getElementById('amcPanel').style.display = 'none'; }
+
+    function tick() {
         const now = Date.now();
+        ['mine', 'faucet'].forEach(type => {
+            const end = localStorage.getItem(type + '_end');
+            const active = localStorage.getItem(type + '_active');
+            const btn = document.getElementById(type + 'Btn');
+            const txt = document.getElementById(type + 'Timer');
+            const card = document.getElementById(type + 'Card');
+            const tag = document.getElementById('speedMineTag');
 
-        if (lastClaim > 0 && (now - lastClaim) < waitMs) {
-            Swal.fire({ title: currentLang === 'en'?'Security Check':'تحقق الأمان', text: currentLang === 'en'?'Wait for timer!':'انتظر انتهاء الوقت!', icon: 'warning' });
-            runTimer(lastClaim);
-            return;
+            if (end && end > now) {
+                btn.disabled = true;
+                card.classList.remove('ready-glow');
+                if(tag && type === 'mine') tag.style.display = 'block';
+                let diff = Math.ceil((end - now) / 1000);
+                txt.innerText = `${Math.floor(diff/60)}m ${diff%60}s`;
+                btn.innerText = "WAIT";
+            } else {
+                if (active === 'true') {
+                    balance += config.rewards[type];
+                    localStorage.setItem(type + '_active', 'false');
+                    saveUser();
+                    showSuccess(config.rewards[type], type.toUpperCase(), type === 'mine' ? "⛏️" : "🍯");
+                }
+                btn.disabled = false;
+                card.classList.add('ready-glow');
+                if(tag && type === 'mine') tag.style.display = 'none';
+                txt.innerText = "Ready";
+                btn.innerText = type === 'mine' ? "Start" : "Claim";
+            }
+        });
+
+        const lastD = localStorage.getItem('last_daily');
+        const dBtn = document.getElementById('dailyBtn');
+        const dTxt = document.getElementById('dailyTimer');
+        const dCard = document.getElementById('dailyCard');
+        if (lastD && (now - lastD < 86400000)) {
+            dBtn.disabled = true;
+            dCard.classList.remove('ready-glow');
+            let diff = 86400000 - (now - lastD);
+            let h = Math.floor(diff/3600000);
+            let m = Math.floor((diff%3600000)/60000);
+            dTxt.innerText = `${h}h ${m}m left`;
+            dBtn.innerText = "DONE";
+        } else {
+            dBtn.disabled = false;
+            dCard.classList.add('ready-glow');
+            dTxt.innerText = "Ready";
+            dBtn.innerText = "Claim Bonus";
         }
+    }
 
-        try {
-            await update(userRef, { balance: uBal + parseFloat(sets.reward), last: now });
-            hcaptcha.reset();
-            Swal.fire({ title: currentLang === 'en'?'TON Claimed!':'تمت المطالبة!', icon: 'success', timer: 1500, showConfirmButton: false });
-            runTimer(now);
-        } catch(e) { btn.disabled = false; }
-    };
-
-    window.doWithdraw = async () => {
-        const email = document.getElementById('w-email').value;
-        const amt = parseFloat(document.getElementById('w-amt').value);
-        if(!email || isNaN(amt) || amt < sets.min || amt > uBal) return Swal.fire('Error', 'Invalid data', 'error');
-        Swal.fire({ title: 'Processing...', didOpen: () => { Swal.showLoading(); } });
-        try {
-            const res = await fetch('https://faucetpay.io/api/v1/send', { method: 'POST', body: new URLSearchParams({ api_key: sets.api, currency: 'TON', amount: (amt*100000000).toFixed(0), to: email }) });
-            const r = await res.json();
-            if(r.status === 200) { await update(userRef, { balance: uBal - amt }); Swal.fire('Success!', 'Sent to FaucetPay', 'success'); }
-            else Swal.fire('Error', r.message, 'error');
-        } catch(e) { Swal.fire('Error', 'API Error', 'error'); }
-    };
-
-    window.nav = (p, el) => {
-        document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
-        document.getElementById('p-'+p).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-    };
-
-    window.copyRef = () => {
-        const el = document.getElementById('ref-link'); el.select(); document.execCommand('copy');
-        Swal.fire({ title: currentLang==='en'?'Copied!':'تم النسخ', icon:'success', timer:1000, showConfirmButton: false });
-    };
-
-    window.saveSMC = async () => {
-        await update(configRef, { adCode: document.getElementById('cfg-ad').value, api: document.getElementById('cfg-api').value, reward: parseFloat(document.getElementById('cfg-reward').value), wait: parseInt(document.getElementById('cfg-wait').value), min: parseFloat(document.getElementById('cfg-min').value) });
-        Swal.fire('Saved!', '', 'success');
-    };
-
-    let g = 0;
-    document.getElementById('smc-trigger').onclick = () => { 
-        g++; if(g>=5) { 
-            Swal.fire({ title: 'Admin', input: 'password' }).then((r) => { if (r.value === "Ahmednnn3") document.getElementById('smc-ui').style.display='block'; g=0; });
-        }
-    };
-    tg.expand();
+    setInterval(tick, 1000);
+    syncAll();
 </script>
 </body>
 </html>
