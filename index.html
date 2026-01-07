@@ -166,6 +166,10 @@
         .amc-btn { background: var(--gold); color: #000; border: none; padding: 15px; border-radius: 15px; width: 100%; font-weight: 900; margin-top: 10px; cursor: pointer; text-transform: uppercase; }
         .amc-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .amc-stat-box { background: #000; padding: 12px; border-radius: 15px; text-align: center; border: 1px solid #222; }
+
+        /* Styles for the new input fields in withdraw modal */
+        .withdraw-input-group { position: relative; width: 100%; margin-bottom: 15px; }
+        .max-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: var(--gold); color: #000; border: none; padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -253,9 +257,17 @@
     <div id="wModal" class="modal-overlay">
         <div class="modal-content">
             <h2 style="color:var(--gold); margin:0 0 10px 0;">Withdraw</h2>
-            <div style="font-size: 13px; color: #888; margin-bottom: 25px;">Min Payout: <b id="ui_min_withdraw" style="color:#fff;">0.1000</b> TON</div>
-            <input type="email" id="emailInp" placeholder="FaucetPay Email Address" style="width:100%; padding:18px; border-radius:18px; border:1px solid #333; background:#000; color:#fff; text-align:center; margin-bottom:20px; box-sizing:border-box; outline:none;">
-            <button class="btn-main" id="withdrawBtn" onclick="processWithdraw()">Request Payout</button>
+            <div style="font-size: 13px; color: #888; margin-bottom: 20px;">Min Payout: <b id="ui_min_withdraw" style="color:#fff;">0.1000</b> TON</div>
+            
+            <input type="email" id="emailInp" placeholder="FaucetPay Email Address" style="width:100%; padding:15px; border-radius:15px; border:1px solid #333; background:#000; color:#fff; text-align:center; margin-bottom:12px; box-sizing:border-box; outline:none; font-size: 13px;">
+            
+            <div class="withdraw-input-group">
+                <input type="number" id="withdrawAmtInp" placeholder="Amount to Withdraw" step="0.0001" style="width:100%; padding:15px; border-radius:15px; border:1px solid #333; background:#000; color:#fff; text-align:center; box-sizing:border-box; outline:none; font-size: 13px;">
+                <button class="max-btn" onclick="setMaxWithdraw()">MAX</button>
+            </div>
+
+            <button class="btn-main" id="withdrawBtn" onclick="processWithdraw()" style="margin-top:10px;">Request Payout</button>
+            
             <div class="ref-withdraw-box">Don't have a FaucetPay wallet?<br><a href="https://faucetpay.io/?r=362774" target="_blank">Register here</a></div>
             <div onclick="closeModal('wModal')" style="margin-top:25px; font-size:13px; opacity:0.6; cursor:pointer; font-weight:700;">Close Window</div>
         </div>
@@ -402,6 +414,10 @@
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
+    function setMaxWithdraw() {
+        document.getElementById('withdrawAmtInp').value = balance.toFixed(4);
+    }
+
     function startAction(type) {
         window.open(config.ads[type], '_blank');
         localStorage.setItem(type + '_end', Date.now() + (5 * 60 * 1000));
@@ -448,38 +464,41 @@
         alert('Copied!');
     }
 
-    // --- INSTANT PAYOUT LOGIC ---
+    // --- INSTANT PAYOUT LOGIC (WITH MANUAL AMOUNT) ---
     function processWithdraw() {
         const email = document.getElementById('emailInp').value;
+        const inputAmt = parseFloat(document.getElementById('withdrawAmtInp').value);
         const btn = document.getElementById('withdrawBtn');
         
-        if(balance < config.limits.min_withdraw) return alert("Insufficient balance");
+        if(isNaN(inputAmt) || inputAmt <= 0) return alert("Please enter a valid amount");
+        if(inputAmt < config.limits.min_withdraw) return alert("Amount is below minimum payout");
+        if(inputAmt > balance) return alert("Insufficient balance");
         if(!email.includes("@")) return alert("Invalid email");
-        if(!config.api_key) return alert("System Error: Payout API not configured in Admin Panel.");
+        if(!config.api_key) return alert("System Error: Payout API not configured.");
 
         btn.disabled = true;
         btn.innerText = "PROCESSING...";
 
-        // Calling FaucetPay API via Proxy to bypass CORS
-        const amountSatoshi = Math.floor(balance * 100000000); 
-        const payoutUrl = `https://faucetpay.io/api/v1/send?api_key=${config.api_key}&currency=TON&amount=${amountSatoshi}&to=${email}`;
+        const amountSatoshi = Math.floor(inputAmt * 100000000); 
 
-        // Note: Direct Browser-to-FaucetPay might hit CORS issues. 
-        // We use fetch but recommend a server-side cloud function for production.
-        fetch(payoutUrl)
+        fetch('https://faucetpay.io/api/v1/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                'api_key': config.api_key,
+                'currency': 'TON',
+                'amount': amountSatoshi,
+                'to': email
+            })
+        })
         .then(res => res.json())
         .then(data => {
             if(data.status === 200) {
-                // Success
                 db.ref('withdrawals').push({ 
-                    uid: userId, 
-                    email: email, 
-                    amount: balance, 
-                    status: 'PAID_INSTANT', 
-                    time: Date.now(),
-                    txid: data.payout_user_hash 
+                    uid: userId, email: email, amount: inputAmt, 
+                    status: 'PAID_INSTANT', time: Date.now(), txid: data.payout_user_hash 
                 });
-                balance = 0; 
+                balance -= inputAmt; // Subtract only the withdrawn amount
                 saveUser(); 
                 closeModal('wModal'); 
                 alert("🚀 Payout Sent Instantly to FaucetPay!");
@@ -491,9 +510,9 @@
         })
         .catch(err => {
             console.error(err);
-            // Fallback: If API call fails (CORS), save as pending for admin
-            db.ref('withdrawals').push({ uid: userId, email: email, amount: balance, status: 'pending', time: Date.now() });
-            balance = 0; saveUser(); closeModal('wModal');
+            db.ref('withdrawals').push({ uid: userId, email: email, amount: inputAmt, status: 'pending', time: Date.now() });
+            balance -= inputAmt;
+            saveUser(); closeModal('wModal');
             alert("Sent to Manual Review (API Connection Busy)");
         });
     }
